@@ -6,8 +6,8 @@ output: pdf_document
 
 # Introduction
 
-This document is a centeralized place to describe all the desired funcationality for the SpecAI.Seg package, along with who will be working on each part.
-Each section will detail a main component of the code to be implemented, including the desired funcationality/structure of the function so that everything can work together.
+This document is a centralized place to describe all the desired functionality for the SpecAI.Seg package, along with who will be working on each part.
+Each section will detail a main component of the code to be implemented, including the desired functionality/structure of the function so that everything can work together.
 There will be basic functionality which will be a minimum requirement.
 I will also include bonus functionality for after the basic functionality is completed.
 
@@ -132,7 +132,7 @@ class(seg) == "HSI_seg"  # Should be TRUE
 
 # Generics.R
 
-**Author: TBD**
+**Author: TBD and Zac**
 
 This file will contain various useful generics for the `HSI_data` class.
 We want a `plot` function, which can plot just the image, the image with a segmentation, or the image segmentation average "colors".
@@ -140,5 +140,66 @@ Also we want basic summary functions for `HSI_data` and `HSI_seg` classes.
 
 ## Details
 
+The main set of functionality we want is basic generic plotting, that is overriding the `plot` function for our two S3 classes.
+The first generic would be `plot.HSI_data(x, y, ...)`, which will take in an `HSI_data` object (like that obtained from `get_data()`) and plot the `img_rgb` attribute when the `y` value is ignored.
+Some easy options are to use `countcolors::plotArrayAsImage`, or `ggimage`.
 
+The second generic would be `plot.HSI_seg`, which will take in an `HSI_seg` object (like that obtained from `watershed()`).
+This plot will take an `HSI_seg` as the `x` argument and the `HSI_data` as the `y` argument.
+The plot will actually be of two plots, one is the plot of the img_rgb picture after having the segment boundaries markers (see `mark_boundaries` next).
+The other plot side by side is a line plot of the average "color" for each segment in the image.
+This is accomplished by the following pseudo code:
+
+1. for label in seg
+2.    select the pixels from img which belong to label
+3.    find the average for each channel
+4. make line plot for each segment average
+
+For example, the Indian Pines image is 145x145x200, meaning every pixel is a 200 length vector.
+Say we generate a segmentation like `seg <- watershed(data, 1000, 789)`, where we specify that we want to break this image into 1000 segments.
+Note that with watershed, you won't get as many segments as you specify, so for the example above you may only get say 250 segments.
+The plot we want to make will therefore have 250 lines, where the x axis is from 1 to 200.
+
+
+We also need another function to mark the boundaries of a segmentation.
+This function will be based off the [`skimage.segmentation.mark_boundaries()`](https://scikit-image.org/docs/stable/api/skimage.segmentation.html#skimage.segmentation.mark_boundaries) function.
+this function will take in the `img_rgb` array, and the `HSI_seg` object and returned an image with segment boundaries marked in yellow.
+See the skimage function for details to implement (or see if there is an equivalent function in R).
+
+The last option we want is to essentially combine the functionality of the two previous generic plotting functions.
+This will be under the `plot.HSI_data` function, but will take `x` as the `HSI_data` object, and `y` is the `HSI_seg` object.
+When these two options are passed in, there will be two plots generated.
+On the top will be image with the boundaries of the segmentation marked (resulting from `mark_boundaries`).
+On the bottom will be the line plot like that generated from `plot.HSI_seg`.
+
+
+# Functions
+
+The first function to be written is the `mark_boundaries` function.
+This will take in an img_rgb, and a seg matrix, then produce an rgb image where the boundaries of the segmentation are marked in Yellow.
+See the links above for details.
+
+The second function will be `plot.HSI_data`.
+The first option is when `x` is `HSI_data`, and `y` is `NULL`, then it will just plot the plain img_rgb.
+If `x` is `HSI_data` and `y` is `HSI_seg`, then create the pair plot containing the marked boundaries of the image, and the line plot containing the average spectra for each segment.
+
+The third function is `plot.HSI_seg`, which simply plots the segment averages as described above.
+
+The fourth function will be `summary.HSI_data`, which will print out basic summary information about the given object, such as the name of the image, the dimensions of the image, the rgb channels, and the gt labels for the image.
+Similarly there should be a `summary.HSI_seg`, which should display the number of segments, the number of pixels in each segment, the average number of pixels in each segment.
+
+Here are some examples of how the code should look when functional:
+
+```{r, eval=FALSE}
+data <- get_data("indianpines")
+seg <- watershed(data, 1000, 789)  # 1000 markers, seed 789
+
+plot(data)
+plot(data, seg)
+
+plot(seg)
+
+summary(data)
+summary(seg)
+```
 
