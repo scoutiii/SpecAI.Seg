@@ -20,7 +20,7 @@ The code can be found [here](https://github.com/lanl/SpecAI.Seg), so please take
 
 # Data.R
 
-**Author: TBD**
+**Author: Kyle Steinicke**
 
 This file will hold all of the code for loading in the data, formatting it appropriately, and creating a custom S3 class called "HSI_data".
 This is the first function that needs to be created, as no one else can work on their code until this is completed.
@@ -132,7 +132,7 @@ class(seg) == "HSI_seg"  # Should be TRUE
 
 # Generics.R
 
-**Author: TBD and Zac**
+**Author: Eric Aikens and Zac**
 
 This file will contain various useful generics for the `HSI_data` class.
 We want a `plot` function, which can plot just the image, the image with a segmentation, or the image segmentation average "colors".
