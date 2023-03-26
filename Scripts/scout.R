@@ -1,6 +1,11 @@
 load_all()
 
-get_data <- function(name, folder="./HSI_Data/") {
+get_data <- function(name, folder="./HSI_Data/", timeout=-1) {
+  old_timeout <- getOption("timeout")
+  if (old_timeout != timeout) {
+    options(timeout=timeout)
+  }
+
   name <- tolower(name)
   data_names <- tolower(names(image_details))
   ind <- which(data_names == name)
@@ -23,6 +28,8 @@ get_data <- function(name, folder="./HSI_Data/") {
 
   save_gt <- paste0(save_dir, data_info$gt)
   download.file(data_info$urls[2], save_gt)
+
+  options(timeout=old_timeout)
 }
 
-get_data("indianpines")
+get_data("botswana")
