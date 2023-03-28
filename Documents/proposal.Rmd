@@ -25,7 +25,7 @@ For example, to identify the objects or materials present in an image, one may a
 The downside to this approach is that there is no spatial information included from the image, as each pixel is treated independently.
 One way to reincorporate this spatial information, is to use a process called image segmentation.
 Image segmentation is the process of breaking an image into groups of similar pixels.
-Not only does this help include spatial information, it also helps reduce processing resources, as each segment can be summarized typically using the average of all pixels in the segment.
+Not only does this help include spatial information, it also helps reduce computational requirements, as each segment can be summarized typically using the average of all pixels in the segment.
 
 There are many potential algorithms for image segmentation, though there are some additional difficulties when applying these to HSI.
 One popular algorithm is the Watershed segmentation algorithm.
@@ -37,17 +37,17 @@ The most popular software for HSI segmentation is \texttt{eCogntition} [@kotarid
 In collaboration with Los Alamos National Laboratory, Scout Jarman created the \texttt{SpecAI.Seg} package in Python to facilitate HSI segmentation in Python [@specaiseg].
 This package provides an easy frame work for loading in a set of standard HSI datasets, as well as the ability to load in custom datasets.
 These datasets include Indian Pines, Salinas, Pavia University, Pavia Center, Botswana, and Kenedy Space Center [@hsiDatasets].
-Additional, this package has several segmentation algorithms in addition to Watershed, such as Slic, Quickshift, and Felzenszwalb.
+Additionally, this package has several segmentation algorithms in addition to Watershed, such as Slic, Quickshift, and Felzenszwalb.
 There is also plotting functionality using \texttt{matplotlib}.
 
 # Proposed Package
 
 \texttt{SpecAI.Seg} is, to the best of our knowledge, the first open source Python package specifically for HSI segmentation.
 Because we want the most amount of researchers to be able to use these HSI segmentation tools, we wish to recreate the \texttt{SpecAI.Seg} package in R.
-This would also be a novel contribution to the R community because though there are package to load in HSI into R, there are no package for doing HSI segmentation in R.
-The existing R packages for working with HSI are \texttt{raster}, \texttt{rhdf5}, and \texttt{rgdal} [@raster, @rhdf5, @rgdal].
-However these package don't offer segmentation functionality, and other packages such as \texttt{itcSegment} are too specialized for general HSI segmentation [@itcSegment].
-Furthermore, because many of the popular HSI datasets are used in Python, they are store as simple \texttt{.mat} files, thus using proper spatial statistics packages are unnecessary for our proposed package.
+This would also be a novel contribution to the R community because, though there are packages to load HSI into R, there are no package for doing HSI segmentation in R.
+The existing R packages for working with HSI are \texttt{raster}, \texttt{rhdf5}, and \texttt{rgdal} [@raster; @rhdf5; @rgdal].
+However these packages don't offer segmentation functionality, and other packages such as \texttt{itcSegment} are too specialized for general HSI segmentation [@itcSegment].
+Furthermore, because many of the popular HSI datasets are used in Python they are stored as simple \texttt{.mat} files, so using proper spatial statistics packages are unnecessary for our proposed package.
 
 Our proposed package for this final project will be to port over the basic functionality of the \texttt{SpecAI.Seg} package into R, using as little Python code as reasonable.
 Our package will offer three main components:
@@ -62,15 +62,15 @@ Additionally, by using S3 classes and generics for plotting, we will take away t
 
 # Challenges
 
-There are a few potential challenges will need to be handled.
+There are a few potential challenges that will need to be handled.
 First, data loading.
 The standard datasets can be downloaded from the web, so it is possible that if this website were to be unavailable, then data would not be able to be downloaded.
 It could be possible to have the processed data saved and packaged with the package data, however HSI can be quite large, so they will likely be too large to store.
 We will experiment with the possibility of storing the formatted HSI data with the package, but will likely need to rely on having the website to download the images locally.
 
 Second is the calculation of the RCMG for Watershed segmentation.
-This gradient calculation involves calculating the pairwise distance matrix for a neighborhood of pixels around each pixels, meaning there are a lot of calculations.
-In \texttt{SpecAI.Seg} uses multiprocessing to speed up this calculation.
+This gradient calculation involves calculating the pairwise distance matrix for a neighborhood of pixels around each pixel, meaning there are a lot of calculations.
+\texttt{SpecAI.Seg} uses multiprocessing to speed up this calculation.
 We could include Python code for calculating this gradient, and use the reticulate package in R.
 However we wish to use as little python as possible.
 Instead we will use RCPP to write an efficient single threaded version of the RCMG.
@@ -85,7 +85,7 @@ Thus we will investigate an R implementation of this function, and if all else f
 This package will offer some topics that may be of interest to other students in this class.
 First, is how one can load in data downloaded from the internet.
 Second, is the application of RCPP to speed up a long calculation.
-Third, if needs be, how to reticulate and Python inside of R.
+Third, if needs be, how to use reticulate and Python inside of R.
 Fourth, if any students have an interest in image processing, then this package is an interesting application of image segmentation to a high-dimensional image format.
 
 # References
