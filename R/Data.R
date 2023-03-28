@@ -1,6 +1,10 @@
 library("R.matlab")
 
 get_data <- function(name, folder="./HSI_Data/", timeout=-1) {
+
+
+
+
   old_timeout <- getOption("timeout")
   if (old_timeout != timeout) {
     options(timeout=timeout)
@@ -18,21 +22,21 @@ get_data <- function(name, folder="./HSI_Data/", timeout=-1) {
   if (!dir.exists(folder)) {
     dir.create(folder)
   }
+
   save_dir = paste0(folder, name, "/")
   if (!dir.exists(save_dir)) {
     dir.create(save_dir)
+    save_img <- paste0(save_dir, data_info$img)
+    download.file(data_info$urls[1], save_img)
+    save_gt <- paste0(save_dir, data_info$gt)
+    download.file(data_info$urls[2], save_gt)
+  } else {
+    save_img <- paste(save_dir, data_info$img, sep = "/")
+    save_gt <- paste(save_dir, data_info$gt, sep = "/")
   }
 
-  save_img <- paste0(save_dir, data_info$img)
-  download.file(data_info$urls[1], save_img)
-
-  save_gt <- paste0(save_dir, data_info$gt)
-  download.file(data_info$urls[2], save_gt)
-
   img_raw <- readMat(save_img)
-
   img_raw <- img_raw[[data_info$img_key]]
-
   img_clipped <- img_raw
   img_clipped <- unlist(img_clipped)
   gt <- readMat(save_gt)
@@ -61,3 +65,5 @@ get_data <- function(name, folder="./HSI_Data/", timeout=-1) {
 
   return(formatted_data)
 }
+
+data <- get_data("indianpines")
