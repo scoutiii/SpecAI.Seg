@@ -32,7 +32,7 @@ image_details <- list(
       "http://www.ehu.eus/ccwintco/uploads/f/fa/Salinas_gt.mat"
     ),
     "img" = "Salinas_corrected.mat",
-    "img_key" = "salinas_corrected",
+    "img_key" = "salinas.corrected",
     "gt" = "Salinas_gt.mat",
     "gt_key" = "salinas_gt",
     "rgb_bands" = c(44, 22, 12),
@@ -118,7 +118,7 @@ image_details <- list(
       "http://www.ehu.eus/ccwintco/uploads/c/c4/Indian_pines_gt.mat"
     ),
     "img" = "Indian_pines_corrected.mat",
-    "img_key" = "indian_pines_corrected",
+    "img_key" = "indian.pines.corrected",
     "gt" = "Indian_pines_gt.mat",
     "gt_key" = "indian_pines_gt",
     "rgb_bands" = c(44, 22, 12),

@@ -30,7 +30,10 @@ get_data <- function(name, folder="./HSI_Data/", timeout=-1) {
   download.file(data_info$urls[2], save_gt)
 
   img_raw <- readMat(save_img)
-  img_clipped <- img_raw[data_info$img_key]
+
+  img_raw <- img_raw[[data_info$img_key]]
+
+  img_clipped <- img_raw
   img_clipped <- unlist(img_clipped)
   gt <- readMat(save_gt)
 
@@ -40,22 +43,21 @@ get_data <- function(name, folder="./HSI_Data/", timeout=-1) {
   img_clipped[img_clipped > q9975] <- q9975
   img_clipped[img_clipped < q25] <- q25
 
+
   # scale image to [0,1]
   img <- (img_clipped - min(img_clipped)) / (max(img_clipped) - min(img_clipped))
+
   formatted_data <- list(
     img_raw = img_raw,
-    img_clipped = img_clipped,
+    img_clipped = array(img_clipped, dim = dim(img_raw)),
     img = img,
     gt = gt,
     label_values = data_info$label_values,
     ignored_labels = data_info$ignored_labels,
     rgb_bands = data_info$rgb_bands,
-    img_rgb = data_info$rgb_bands
+    img_rgb = img[, , data_info$rgb_bands]
   )
   options(timeout=old_timeout)
 
   return(formatted_data)
 }
-
-
-data <- get_data("indianpines")
