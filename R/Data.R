@@ -1,10 +1,61 @@
-get_data <- function(name) {
-  name <- tolower(name)
-  for (i in 1:length(image_details)) {
-    if (grepl(name, tolower(image_details[[i]]$img_key))) {
-      url <- image_details[[i]]$url[1]
-      filename <- paste0(name, ".jpg") # save the file with the name
-      download.file(url, filename)
-    }
+library("R.matlab")
+
+get_data <- function(name, folder="./HSI_Data/", timeout=-1) {
+  old_timeout <- getOption("timeout")
+  if (old_timeout != timeout) {
+    options(timeout=timeout)
   }
+
+  name <- tolower(name)
+  data_names <- tolower(names(image_details))
+  ind <- which(data_names == name)
+  if (length(ind) == 0) {
+    stop(paste(name, "is not an available dataset"))
+  }
+  data_info <- image_details[[which(data_names == name)]]
+  name <- names(image_details)[ind]
+
+  if (!dir.exists(folder)) {
+    dir.create(folder)
+  }
+  save_dir = paste0(folder, name, "/")
+  if (!dir.exists(save_dir)) {
+    dir.create(save_dir)
+  }
+
+  save_img <- paste0(save_dir, data_info$img)
+  download.file(data_info$urls[1], save_img)
+
+  save_gt <- paste0(save_dir, data_info$gt)
+  download.file(data_info$urls[2], save_gt)
+
+  img_raw <- readMat(save_img)
+  img_clipped <- img_raw[data_info$img_key]
+  img_clipped <- unlist(img_clipped)
+  gt <- readMat(save_gt)
+
+  # clipping the image
+  q25 <- quantile(as.numeric(img_clipped), probs = 0.025)
+  q9975 <- quantile(as.numeric(img_clipped), probs = 0.9975)
+  img_clipped[img_clipped > q9975] <- q9975
+  img_clipped[img_clipped < q25] <- q25
+
+  # scale image to [0,1]
+  img <- (img_clipped - min(img_clipped)) / (max(img_clipped) - min(img_clipped))
+  formatted_data <- list(
+    img_raw = img_raw,
+    img_clipped = img_clipped,
+    img = img,
+    gt = gt,
+    label_values = data_info$label_values,
+    ignored_labels = data_info$ignored_labels,
+    rgb_bands = data_info$rgb_bands,
+    img_rgb = data_info$rgb_bands
+  )
+  options(timeout=old_timeout)
+
+  return(formatted_data)
 }
+
+
+data <- get_data("indianpines")
