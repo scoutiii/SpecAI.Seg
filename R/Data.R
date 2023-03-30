@@ -1,4 +1,5 @@
-get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE) {
+get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE,
+                     clip_p = .9975) {
   name <- tolower(name)
   data_names <- tolower(names(image_details))
   ind <- which(data_names == name)
@@ -37,8 +38,8 @@ get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE) {
   gt <- R.matlab::readMat(save_gt)
 
   # clipping the image
-  q25 <- stats::quantile(as.numeric(img_clipped), probs = 0.025)
-  q9975 <- stats::quantile(as.numeric(img_clipped), probs = 0.9975)
+  q25 <- stats::quantile(as.numeric(img_clipped), probs = 1-clip_p)
+  q9975 <- stats::quantile(as.numeric(img_clipped), probs = clip_p)
   img_clipped[img_clipped > q9975] <- q9975
   img_clipped[img_clipped < q25] <- q25
 
