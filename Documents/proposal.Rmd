@@ -60,6 +60,11 @@ These three components will be designed to work smoothly with each other by the 
 Having such an R package would greatly improve the ability for users to do HSI segmentation in R because there is currently no easy way (i.e. a package) to do such tasks.
 Additionally, by using S3 classes and generics for plotting, we will take away the tedious work of tracking the various parts involved in HSI segmentation, and make it easy to load, segment, and plot the most popular HSI images.
 
+Just like with the Python \texttt{SpecAI.Seg} package we will provide access to the 6 standard HSI datasets called Indian Pines, Pavia University, Pavia Center, Salinas, Botswana, and Kennedy Space Center, as sourced from @hsiDatasets.
+Because these datasets are large, they will be downloaded when the user first tries to access the data, and stored to be loaded locally for subsequent use.
+There is an internal dataset which contains all the meta data for downloading each image and ground truth.
+This internal dataset is copied from the \texttt{data\_raw} folder from the Python \texttt{SpecAI.Seg} package.
+
 # Challenges
 
 There are a few potential challenges that will need to be handled.

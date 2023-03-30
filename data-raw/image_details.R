@@ -9,7 +9,7 @@ image_details <- list(
     "img" = "Pavia.mat",
     "img_key" = "pavia",
     "gt" = "Pavia_gt.mat",
-    "gt_key" = "pavia_gt",
+    "gt_key" = "pavia.gt",
     "rgb_bands" = c(56, 42, 13),
     "label_values" = c(
       "Undefined",
@@ -23,7 +23,7 @@ image_details <- list(
       "Meadows",
       "Bare Soil"
     ),
-    "ignored_labels" = c(0)
+    "ignored_labels" = c(1)
   ),
 
   "Salinas" = list(
@@ -34,7 +34,7 @@ image_details <- list(
     "img" = "Salinas_corrected.mat",
     "img_key" = "salinas.corrected",
     "gt" = "Salinas_gt.mat",
-    "gt_key" = "salinas_gt",
+    "gt_key" = "salinas.gt",
     "rgb_bands" = c(44, 22, 12),
     "label_values" = c(
       "Undefined",
@@ -55,7 +55,7 @@ image_details <- list(
       "Vinyard_untrained",
       "Vinyard_vertical_trellis"
     ),
-    "ignored_labels" = c(0)
+    "ignored_labels" = c(1)
   ),
 
   "PaviaU" = list(
@@ -66,7 +66,7 @@ image_details <- list(
     "img" = "PaviaU.mat",
     "img_key" = "paviaU",
     "gt" = "PaviaU_gt.mat",
-    "gt_key" = "paviaU_gt",
+    "gt_key" = "paviaU.gt",
     "rgb_bands" = c(56, 42, 13),
     "label_values" = c(
       "Undefined",
@@ -80,7 +80,7 @@ image_details <- list(
       "Self-Blocking Bricks",
       "Shadows"
     ),
-    "ignored_labels" = c(0)
+    "ignored_labels" = c(1)
   ),
 
   "KSC" = list(
@@ -91,7 +91,7 @@ image_details <- list(
     "img" = "KSC.mat",
     "img_key" = "KSC",
     "gt" = "KSC_gt.mat",
-    "gt_key" = "KSC_gt",
+    "gt_key" = "KSC.gt",
     "rgb_bands" = c(44, 22, 12),
     "label_values" = c(
       "Undefined",
@@ -109,7 +109,7 @@ image_details <- list(
       "Mud flats",
       "Water"
     ),
-    "ignored_labels" = c(0)
+    "ignored_labels" = c(1)
   ),
 
   "IndianPines" = list(
@@ -120,7 +120,7 @@ image_details <- list(
     "img" = "Indian_pines_corrected.mat",
     "img_key" = "indian.pines.corrected",
     "gt" = "Indian_pines_gt.mat",
-    "gt_key" = "indian_pines_gt",
+    "gt_key" = "indian.pines.gt",
     "rgb_bands" = c(44, 22, 12),
     "label_values" = c(
       "Undefined",
@@ -141,7 +141,7 @@ image_details <- list(
       "Buildings-Grass-Trees-Drives",
       "Stone-Steel-Towers"
     ),
-    "ignored_labels" = c(0)
+    "ignored_labels" = c(1)
   ),
 
   "Botswana" = list(
@@ -152,7 +152,7 @@ image_details <- list(
     "img" = "Botswana.mat",
     "img_key" = "Botswana",
     "gt" = "Botswana_gt.mat",
-    "gt_key" = "Botswana_gt",
+    "gt_key" = "Botswana.gt",
     "rgb_bands" = c(76, 34, 16),
     "label_values" = c(
       "Undefined",
@@ -171,7 +171,7 @@ image_details <- list(
       "Mixed mopane",
       "Exposed soils"
     ),
-    "ignored_labels" = c(0)
+    "ignored_labels" = c(1)
   )
 )
 
