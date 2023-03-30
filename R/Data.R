@@ -34,11 +34,11 @@ get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE) {
   img_raw <- img_raw[[data_info$img_key]]
   img_clipped <- img_raw
   img_clipped <- unlist(img_clipped)
-  gt <- readMat(save_gt)
+  gt <- R.matlab::readMat(save_gt)
 
   # clipping the image
-  q25 <- quantile(as.numeric(img_clipped), probs = 0.025)
-  q9975 <- quantile(as.numeric(img_clipped), probs = 0.9975)
+  q25 <- stats::quantile(as.numeric(img_clipped), probs = 0.025)
+  q9975 <- stats::quantile(as.numeric(img_clipped), probs = 0.9975)
   img_clipped[img_clipped > q9975] <- q9975
   img_clipped[img_clipped < q25] <- q25
 
