@@ -6,3 +6,13 @@ get_neigh <- function(row, col, img) {
     .Call(`_SpecAI_Seg_get_neigh`, row, col, img)
 }
 
+#' @export
+rcmg_euclid <- function(img, r = 1L) {
+    .Call(`_SpecAI_Seg_rcmg_euclid`, img, r)
+}
+
+#' @export
+rcmg_cos <- function(img, r = 1L) {
+    .Call(`_SpecAI_Seg_rcmg_cos`, img, r)
+}
+

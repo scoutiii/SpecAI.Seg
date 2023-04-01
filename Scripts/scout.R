@@ -1,15 +1,16 @@
 load_all()
-library(SpecAI.Seg)
+library(ggplot2)
+library(magick)
 
 data <- get_data("indianpines")
 
-img_to_list <- function(img) {
-  res = list()
-  for (i in seq_len(dim(img)[3])) {
-    res[i] = list(img[, , i])
-  }
-  res
-}
+grad <- rcmg_euclid(data$img)
+to_plot <- replicate(3, grad)
+to_plot <- (to_plot - min(to_plot)) / (max(to_plot) - min(to_plot))
+ggmap::ggimage(to_plot)
 
-img <- img_to_list(data$img)
-test <- get_neigh(0, 0, img)
+grad <- rcmg_cos(data$img)
+to_plot <- replicate(3, grad)
+to_plot <- (to_plot - min(to_plot)) / (max(to_plot) - min(to_plot))
+ggmap::ggimage(to_plot)
+
