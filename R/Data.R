@@ -1,3 +1,20 @@
+#' Data getter function
+#'
+#' Downloads HSI data a
+#'
+#' @param name image name to be downloaded
+#' @param folder folder to send output to
+#' @param verbose boolean determining if user wants function messages
+#' @param clip_p percentile to clip the image to
+#'
+#' @return HSI_data object
+#'
+#' @examples
+#' get_data("botswana)
+#' get_data(name = "PaviaU", verbose = FALSE, clip_p = .9950)
+#'
+#' @export
+#'
 get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE,
                      clip_p = .9975) {
   name <- tolower(name)
@@ -18,7 +35,7 @@ get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE,
     if (verbose) {
       message("Downloading data...")
     }
-     dir.create(save_dir)
+    dir.create(save_dir)
     save_img <- paste0(save_dir, data_info$img)
     curl::curl_download(data_info$urls[1], save_img, quiet = !verbose)
     save_gt <- paste0(save_dir, data_info$gt)
