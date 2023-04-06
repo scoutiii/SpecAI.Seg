@@ -23,6 +23,12 @@ get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE,
   if (length(ind) == 0) {
     stop(paste(name, "is not an available dataset"))
   }
+  if (clip_p > 1 || clip_p < 0) {
+    stop("clip_p must be between 0 and 1")
+  }
+  if (!is.logical(verbose)) {
+    stop("verbose must be a boolean")
+  }
   data_info <- image_details[[which(data_names == name)]]
   name <- names(image_details)[ind]
 
