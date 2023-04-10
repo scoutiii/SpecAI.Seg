@@ -84,3 +84,12 @@ get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE,
   structure(formatted_data,
             class = "HSI_data")
 }
+
+get_all_data <- function() {
+  image_list = c("PaviaC", "Salinas", "PaviaU", "KSC", "IndianPines",
+                 "Botswana")
+  for (image in image_list) {
+    message(paste0("Beginning download of: ", image))
+    get_data(image)
+  }
+}
