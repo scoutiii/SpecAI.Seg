@@ -1,6 +1,6 @@
 #' Data getter function
 #'
-#' Downloads HSI data a
+#' Downloads HSI data
 #'
 #' @param name image name to be downloaded
 #' @param folder folder to send output to
@@ -84,7 +84,15 @@ get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE,
   structure(formatted_data,
             class = "HSI_data")
 }
-
+#' Get all data function
+#'
+#' Downloads HSI data for all elements in image_details
+#'
+#' @example
+#' get_all_data()
+#'
+#' @export
+#'
 get_all_data <- function() {
   image_list = c("PaviaC", "Salinas", "PaviaU", "KSC", "IndianPines",
                  "Botswana")
