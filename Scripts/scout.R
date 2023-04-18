@@ -1,6 +1,7 @@
 load_all()
 library(ggplot2)
 library(magick)
+load_all()
 
 data <- get_data("indianpines")
 
