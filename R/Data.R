@@ -1,6 +1,7 @@
-#' Data getter function
+#' Get data function
 #'
-#' Downloads HSI data
+#' Downloads HSI data, can be indianpines, salinas, paviau (university),
+#' paviac (center), ksc (Kennedy Space Center), botswana
 #'
 #' @param name image name to be downloaded
 #' @param folder folder to send output to
@@ -10,11 +11,12 @@
 #' @return HSI_data object
 #'
 #' @examples
-#' get_data("botswana)
-#' get_data(name = "PaviaU", verbose = FALSE, clip_p = .9950)
+#' \dontrun{
+#'   bots <- get_data("botswana")
+#'   pu <- get_data("PaviaU", verbose = FALSE, clip_p = .9950)
+#' }
 #'
 #' @export
-#'
 get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE,
                      clip_p = .9975) {
   name <- tolower(name)
@@ -61,16 +63,19 @@ get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE,
   gt <- R.matlab::readMat(save_gt)
 
   # clipping the image
-  q25 <- stats::quantile(as.numeric(img_clipped), probs = 1-clip_p)
+  q25 <- stats::quantile(as.numeric(img_clipped), probs = 1 - clip_p)
   q9975 <- stats::quantile(as.numeric(img_clipped), probs = clip_p)
   img_clipped[img_clipped > q9975] <- q9975
   img_clipped[img_clipped < q25] <- q25
 
 
   # scale image to [0,1]
-  img <- (img_clipped - min(img_clipped)) / (max(img_clipped) - min(img_clipped))
+  mx <- max(img_clipped)
+  mn <- min(img_clipped)
+  img <- (img_clipped - mn) / (mx - mn)
 
   formatted_data <- list(
+    name = name,
     img_raw = img_raw,
     img_clipped = array(img_clipped, dim = dim(img_raw)),
     img = img,
@@ -82,22 +87,30 @@ get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE,
   )
 
   structure(formatted_data,
-            class = "HSI_data")
+    class = "HSI_data"
+  )
 }
+
+
 #' Get all data function
 #'
-#' Downloads HSI data for all elements in image_details
+#' Downloads HSI data for all 6 images
 #'
-#' @example
-#' get_all_data()
+#' @param ... Passed to get_data
+#'
+#' @examples
+#' \dontrun{
+#'   get_all_data(verbose = FALSE)
+#' }
 #'
 #' @export
-#'
-get_all_data <- function() {
-  image_list = c("PaviaC", "Salinas", "PaviaU", "KSC", "IndianPines",
-                 "Botswana")
+get_all_data <- function(...) {
+  image_list <- c(
+    "PaviaC", "Salinas", "PaviaU", "KSC", "IndianPines", "Botswana"
+  )
   for (image in image_list) {
     message(paste0("Beginning download of: ", image))
-    get_data(image)
+    # Just run the downloaded portion of the code here instead of the whole func
+    get_data(image, ...)
   }
 }

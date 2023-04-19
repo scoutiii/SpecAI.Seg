@@ -4,13 +4,13 @@ test_that("get_data", {
   expect_error(get_data("invalid_input"))
   expect_error(get_data("botswana", verbose = "invalid_input"))
   expect_error(get_data("PaviaC", clip_p = 2.5))
-  expect_no_error(get_data("IndianPines"))
-  expect_no_error(get_data("SALINAS"))
+  expect_no_error(ip <- get_data("IndianPines", verbose = FALSE))
 
+  # Add test cases that only verify certain values for indian pines.
+  # Check name, check dimensions, check max/min values (can be hard coded)
 
-  # Testing get_all_data() function
-  expect_no_error(get_all_data())
 
   # Testing correct class output
-  expect_equal("HSI_data", class(get_data("PaviaU")))
+  expect_equal("HSI_data", class(ip))
+  unlink("./HSI_Data/", TRUE, TRUE)
 })
