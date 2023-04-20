@@ -105,7 +105,6 @@ get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE,
 #'
 #' @export
 get_all_data <- function(...) {
-  clip_p = .9975
   image_list <- c(
     "PaviaC", "Salinas", "PaviaU", "KSC", "IndianPines", "Botswana"
   )
@@ -115,8 +114,7 @@ get_all_data <- function(...) {
   }
 
   for (image in image_list) {
-    name <- image
-    name <- tolower(name)
+    name <- tolower(image)
     data_names <- tolower(names(image_details))
     ind <- which(data_names == name)
     data_info <- image_details[[which(data_names == name)]]
@@ -143,8 +141,8 @@ get_all_data <- function(...) {
     gt <- R.matlab::readMat(save_gt)
 
     # clipping the image
-    q25 <- stats::quantile(as.numeric(img_clipped), probs = 1 - clip_p)
-    q9975 <- stats::quantile(as.numeric(img_clipped), probs = clip_p)
+    q25 <- stats::quantile(as.numeric(img_clipped), probs = 1 - .9975)
+    q9975 <- stats::quantile(as.numeric(img_clipped), probs = .9975)
     img_clipped[img_clipped > q9975] <- q9975
     img_clipped[img_clipped < q25] <- q25
 
