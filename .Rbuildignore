@@ -5,3 +5,4 @@
 ^data-raw$
 ^HSI_Data$
 ^Scripts$
+^README\.Rmd$
