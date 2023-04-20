@@ -4,7 +4,25 @@
 using namespace Rcpp;
 
 
+//' Get neighborhood of a pixel in a 3D image
+//'
+//' This function returns the neighborhood of a pixel in a 3D image. Returns the
+//' 8 neighboring (plus center pixel) for the pixel at row and col. The input
+//' \code{img} is a three-dimensional array containing the image data.
+//'
+//' @param row An integer representing the row index of the pixel of interest.
+//' @param col An integer representing the column index of the pixel of interest.
+//' @param img A cube object containing the image data.
+//'
+//' @return A matrix representing the neighborhood of the pixel of interest.
+//'
 //' @export
+//' @name get_neigh
+//'
+//' @examples
+//' img <- array(1:27, dim = c(3, 3, 3))
+//' get_neigh(2, 2, img)
+//'
 // [[Rcpp::export]]
 arma::mat get_neigh(int row, int col, arma::cube img) {
   int u = std::max(row-1, 0);
@@ -27,8 +45,16 @@ arma::mat get_neigh(int row, int col, arma::cube img) {
 }
 
 
-// Define the pairwise_distance function
-arma::mat pairwise_distances(const arma::mat& X, double (*dist_func)(const arma::rowvec&, const arma::rowvec&)) {
+// Compute pairwise distances between rows of a matrix using a specified
+// distance function
+//
+// @param X A numeric matrix
+// @param dist_func A pointer to a distance function that takes two row vectors
+//   and returns a double
+//
+// @return A symmetric n x n matrix of pairwise distances between rows of X
+arma::mat pairwise_distances(const arma::mat& X,
+                             double (*dist_func)(const arma::rowvec&, const arma::rowvec&)) {
   int n = X.n_rows;
   arma::mat D(n, n);
   for (int i = 0; i < n; i++) {
@@ -42,12 +68,24 @@ arma::mat pairwise_distances(const arma::mat& X, double (*dist_func)(const arma:
   return D;
 }
 
+
 // Define the euclidean distance function
+//
+// Calculates the euclidean distance between two row vectors.
+//
+// @param x A row vector.
+// @param y A row vector.
+// @return The euclidean distance between \code{x} and \code{y}.
 double euclidean_distance(const arma::rowvec& x, const arma::rowvec& y) {
   return arma::norm(x - y, 2);
 }
 
-// Define the cosine distance function
+
+// Define the euclidean distance function
+//
+// @param x a row vector
+// @param y a row vector
+// @return the euclidean distance between \code{x} and \code{y}
 double cosine_distance(const arma::rowvec& x, const arma::rowvec& y) {
   double dot_prod = arma::dot(x, y);
   double norm_x = arma::norm(x, 2);
@@ -55,15 +93,39 @@ double cosine_distance(const arma::rowvec& x, const arma::rowvec& y) {
   return 1 - dot_prod / (norm_x * norm_y);
 }
 
+
+// Calculate the pairwise Euclidean distances between rows of a matrix
+//
+// @param X a matrix
+// @return a matrix of pairwise Euclidean distances
 arma::mat pairwise_euclidean(const arma::mat& X) {
   return pairwise_distances(X, euclidean_distance);
 }
 
+
+// Define the cosine distance function
+//
+// @param x a row vector
+// @param y a row vector
+// @return the cosine distance between x and y
 arma::mat pairwise_cosine(const arma::mat& X) {
   return pairwise_distances(X, cosine_distance);
 }
 
+
+//' Calculates RCMG using Euclidean distance
+//'
+//' For every pixel, find the RCMG where the 8 neighboring pixels make up the
+//' pairwise distance matrix, and r is the number of pairs of pixels to remove.
+//' Don't set r larger than 8.
+//'
+//' @param img A 3D cube containing the image data
+//' @param r An integer specifying the radius of the rolling window
+//'
+//' @return A matrix containing the Euclidean distances of the pixels
+//'
 //' @export
+//' @name rcmg_euclid
 // [[Rcpp::export]]
 arma::mat rcmg_euclid(const arma::cube& img, int r=1) {
   int n = (int)img.n_rows;
@@ -94,7 +156,19 @@ arma::mat rcmg_euclid(const arma::cube& img, int r=1) {
 }
 
 
+//' Calculates RCMG using Euclidean distance
+//'
+//' For every pixel, find the RCMG where the 8 neighboring pixels make up the
+//' pairwise distance matrix, and r is the number of pairs of pixels to remove.
+//' Don't set r larger than 8.
+//'
+//' @param img A 3D cube containing the image data
+//' @param r An integer specifying the radius of the rolling window
+//'
+//' @return A matrix containing the Euclidean distances of the pixels
+//'
 //' @export
+//' @name rcmg_cos
 // [[Rcpp::export]]
 arma::mat rcmg_cos(const arma::cube& img, int r=1) {
   int n = (int)img.n_rows;
