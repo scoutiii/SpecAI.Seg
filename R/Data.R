@@ -122,50 +122,14 @@ get_all_data <- function(...) {
 
     save_dir <- paste0("./HSI_Data/", image, "/")
     if (!dir.exists(save_dir)) {
-      message("Downloading data...")
+      message(paste("Downloading", name, "..."))
       dir.create(save_dir)
       save_img <- paste0(save_dir, data_info$img)
       curl::curl_download(data_info$urls[1], save_img, quiet = FALSE)
       save_gt <- paste0(save_dir, data_info$gt)
       curl::curl_download(data_info$urls[2], save_gt, quiet = FALSE)
     } else {
-      message("Reading in pre-downloaded data...")
-      save_img <- paste0(save_dir, data_info$img)
-      save_gt <- paste0(save_dir, data_info$gt)
+      message(paste(name, "Already downloaded..."))
     }
-
-    img_raw <- R.matlab::readMat(save_img)
-    img_raw <- img_raw[[data_info$img_key]]
-    img_clipped <- img_raw
-    img_clipped <- unlist(img_clipped)
-    gt <- R.matlab::readMat(save_gt)
-
-    # clipping the image
-    q25 <- stats::quantile(as.numeric(img_clipped), probs = 1 - .9975)
-    q9975 <- stats::quantile(as.numeric(img_clipped), probs = .9975)
-    img_clipped[img_clipped > q9975] <- q9975
-    img_clipped[img_clipped < q25] <- q25
-
-
-    # scale image to [0,1]
-    mx <- max(img_clipped)
-    mn <- min(img_clipped)
-    img <- (img_clipped - mn) / (mx - mn)
-
-    formatted_data <- list(
-      name = name,
-      img_raw = img_raw,
-      img_clipped = array(img_clipped, dim = dim(img_raw)),
-      img = img,
-      gt = gt[[data_info$gt_key]],
-      label_values = data_info$label_values,
-      ignored_labels = data_info$ignored_labels,
-      rgb_bands = data_info$rgb_bands,
-      img_rgb = img[, , data_info$rgb_bands]
-    )
-
-    structure(formatted_data,
-              class = "HSI_data"
-    )
   }
 }

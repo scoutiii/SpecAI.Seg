@@ -6,7 +6,16 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of SpecAI.Seg is to …
+The goal of SpecAI.Seg is to bring hyperspectral image (HSI)
+segmentation to R. This package is based of the Python
+[SpecAI.Seg](https://github.com/lanl/SpecAI.Seg) on
+[PyPI](https://pypi.org/project/SpecAI.Seg/). The original SpecAI.Seg
+package contains more functionality than this package, but this R
+package contains most of the basic functionality. We provide the ability
+to download a set of common HSI, namely Indian Pines, Salinas, Pavia
+University, Pavia Center, Botswana, and Kennedy Space Center. More
+information on these datasets can be found
+[here](https://www.ehu.eus/ccwintco/index.php?title=Hyperspectral_Remote_Sensing_Scenes).
 
 ## Installation
 
@@ -18,38 +27,46 @@ You can install the development version of SpecAI.Seg from
 devtools::install_github("scoutiii/SpecAI.Seg")
 ```
 
+Note that we use the Watershed segmentation algorithm from the
+[EBImage](https://bioconductor.org/packages/release/bioc/html/EBImage.html)
+package from Bioconductor. For this reason be sure to have the
+[BiocManager](https://www.bioconductor.org/install/) package installed,
+which can be done with:
+
+``` r
+install.packages("BiocManager")
+```
+
+After installing BiocManager, try to install the SpecAI.Seg package
+using devtools. If it still fails try also installing the EBImage
+package manually with:
+
+``` r
+BiocManager::install("EBImage")
+```
+
+Note that if you are using macOS with the M1 chip, you will likely not
+be able to install bioconductor, and will not be able to use this
+package. Some resources can be found
+[here](https://support.bioconductor.org/p/9137290/).
+
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+Here is a basic example of using watershed segmentation on the Indian
+Pines image. First, we can download the image with:
 
 ``` r
 library(SpecAI.Seg)
 ## basic example code
+
+ip <- get_data("indianpines")
+#> Reading in pre-downloaded data...
+# plot(ip)
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+You can then generate the watershed segmentation using:
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+seg <- watershed_hsi(ip)
+# plot(seg, ip)
 ```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
