@@ -105,13 +105,22 @@ get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE,
 #'
 #' @export
 get_all_data <- function(...) {
+  clip_p = .9975
   image_list <- c(
     "PaviaC", "Salinas", "PaviaU", "KSC", "IndianPines", "Botswana"
   )
+
   if (!dir.exists("./HSI_Data/")) {
     dir.create("./HSI_Data/")
   }
+
   for (image in image_list) {
+    name <- image
+    name <- tolower(name)
+    data_names <- tolower(names(image_details))
+    ind <- which(data_names == name)
+    data_info <- image_details[[which(data_names == name)]]
+    name <- names(image_details)[ind]
 
     save_dir <- paste0("./HSI_Data/", image, "/")
     if (!dir.exists(save_dir)) {
