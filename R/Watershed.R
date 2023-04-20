@@ -1,3 +1,51 @@
+#' Wraps RCMG calculation
+#'
+#' By default, if data is HSI_data, it will calculate gradient for data$img.
+#' For more control, you can pass in an array of 3 dimensions.
+#' Support Euclidean or Cosine distance for type.
+#'
+#' @param data HSI_data or array to calculate gradient of.
+#' @param type "euclidean" or "cos".
+#' @param r how many pairs of pixels to remove.
+#'
+#' @return Appropriate RCMG gradient
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' grad <- calc_grad(data)
+#' grad_c <- calc_grad(data$img_raw, "cos", 2)
+#' }
+calc_grad <- function(data, type = "euclidean", r = 1) {
+  if (!any(methods::is(data) %in% c("HSI_data", "array"))) {
+    stop("Data must be of class HSI_data or array")
+  }
+  type <- tolower(type)
+  if (!any(type %in% c("euclidean", "cos"))) {
+    stop("Type must be either 'euclidean' or 'cos'")
+  }
+  if (r >= 7) {
+    stop("R must be less than 7")
+  }
+  if (any(methods::is(data) == "array")) {
+    if (length(dim(data)) != 3) {
+      stop("For data as array, must have length(dim(data)) == 3")
+    }
+  }
+
+  if (any(methods::is(data) == "HSI_data")) {
+    img <- data$img
+  } else {
+    img <- data
+  }
+
+  if (type == "euclidean") {
+    rcmg_euclid(img, r)
+  } else {
+    rcmg_cos(img, r)
+  }
+}
+
 #' Watershed for HSI
 #'
 #' Run the watershed algorithm on the gradient of an HSI image.
@@ -6,14 +54,22 @@
 #' the RCMG functions.
 #' @param tolerance The tolerance to be used by the watershed algorithm.
 #' @param ext A smoothing parameter to be used in the watershed algorithm
+#' @param ... passed to calc_grad and EBImage::watershed
 #'
 #' @return A segmented image built from the gradient, in the form of a matrix.
 #' @export
-watershed_SpecAI <- function(grad, tolerance = 0.01, ext = 200){
+watershed_hsi <- function(grad, tolerance = 0.01, ext = 200, ...) {
+  if (methods::is(grad) %in% c("HSI_data")) {
+    grad <- calc_grad(grad, ...)
+  }
+  if (!any(methods::is(grad) == "matrix")) {
+    stop("grad must be a matrix, or HSI_data")
+  }
+
   # Get rid of some of the gradient noise
-  grad[grad<quantile(grad, seq(0, 1, 0.05))[15]] <- 0
+  grad[grad < stats::quantile(grad, seq(0, 1, 0.05))[15]] <- 0
   # Use watershed algorithm
-  seg <- EBImage::watershed(grad, tolerance = tolerance, ext = ext)
+  seg <- EBImage::watershed(grad, tolerance = tolerance, ext = ext, ...)
   return(seg)
 }
 
@@ -27,7 +83,7 @@ watershed_SpecAI <- function(grad, tolerance = 0.01, ext = 200){
 #'
 #' @return The image with boundaries marked.
 #' @export
-mark_boundaries <- function(seg, img_rgb, col = c(1, 1, 0)){
+mark_boundaries <- function(seg, img_rgb, col = c(1, 1, 0)) {
   # Standardize the segmented image, necessary for the dilation function
   img2 <- (seg - min(seg)) / (max(seg) - min(seg))
 
@@ -43,10 +99,8 @@ mark_boundaries <- function(seg, img_rgb, col = c(1, 1, 0)){
   # Find boundaries by marking where the dilated and eroded images are not equal
   bound3 <- bound2 != bound1
 
-  for(i in seq_along(col)){
-    img_rgb[,,i][bound3] <- col[i]
+  for (i in seq_along(col)) {
+    img_rgb[, , i][bound3] <- col[i]
   }
   return(img_rgb)
-
 }
-

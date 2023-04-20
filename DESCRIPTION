@@ -17,7 +17,9 @@ Imports:
     curl,
     R.matlab,
     Rcpp,
-    EBImage
+    EBImage,
+    stats,
+    methods
 RoxygenNote: 7.2.3
 LinkingTo: 
     Rcpp,
