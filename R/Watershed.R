@@ -40,10 +40,13 @@ calc_grad <- function(data, type = "euclidean", r = 1) {
   }
 
   if (type == "euclidean") {
-    rcmg_euclid(img, r)
+    grad <- rcmg_euclid(img, r)
   } else {
-    rcmg_cos(img, r)
+    grad <- rcmg_cos(img, r)
   }
+
+  class(grad) <- append(class(grad), "HSI_grad")
+  grad
 }
 
 #' Watershed for HSI
@@ -62,8 +65,8 @@ watershed_hsi <- function(grad, tolerance = 0.01, ext = 200, ...) {
   if (methods::is(grad) %in% c("HSI_data")) {
     grad <- calc_grad(grad, ...)
   }
-  if (!any(methods::is(grad) == "matrix")) {
-    stop("grad must be a matrix, or HSI_data")
+  if (!any(methods::is(grad) %in% c("matrix", "HSI_grad"))) {
+    stop("grad must be a matrix, HSI_data, or HSI_grad")
   }
 
   # Get rid of some of the gradient noise
@@ -78,12 +81,16 @@ watershed_hsi <- function(grad, tolerance = 0.01, ext = 200, ...) {
 #' Find the boundaries of a segmented image
 #'
 #' @param seg The segmented image, typically returned from watershed_SpecAI.
-#' @param img_rgb The image to be marked up, with RGB channels.
+#' @param img_rgb The image to be marked up, with RGB channels, or an HSI_data.
 #' @param col A vector of colors representing (R, G, B) values.
 #'
 #' @return The image with boundaries marked.
 #' @export
 mark_boundaries <- function(seg, img_rgb, col = c(1, 1, 0)) {
+  if (methods::is(img_rgb) == "HSI_data") {
+    img_rgb <- img_rgb$img_rgb
+  }
+
   # Standardize the segmented image, necessary for the dilation function
   img2 <- (seg - min(seg)) / (max(seg) - min(seg))
 

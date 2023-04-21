@@ -3,3 +3,6 @@
 .RData
 .Ruserdata
 HSI_Data/
+inst/doc
+/doc/
+/Meta/

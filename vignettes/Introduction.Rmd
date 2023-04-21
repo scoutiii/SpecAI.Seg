@@ -1,0 +1,131 @@
+---
+title: "Introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: references.bibtex
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/research-institute-for-nature-and-forest.csl
+link-citations: true
+suppress-bibliography: false
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(SpecAI.Seg)
+
+# library(knitr)
+# library(jpeg)
+```
+
+In this vignette, we will discus the usage of this package for the purpose of 
+hyperspectral image (HSI) segmentation.
+We will also demonstrate all the main function usage and options.
+
+## Introduction
+
+Hyperspectral images (HSI) are very similar to color images but differ in the 
+number of channels. 
+Gray-scale images contain 1 channel of information, and color images contain 3
+channels of information representing red, green, and blue.
+HSI on the other hand can have anywhere between 100 to 300 channels representing
+a whole range of different color wavelengths in the electromagnetic spectrum.
+In R, we simply store them as arrays, where the first two dimensions are the spatial
+dimensions, and the third dimension is the spectral dimension.
+
+HSI contains a lot of information, but can be difficult to analyze on a per-pixel
+basis.
+We can use image segmentation to help summarize the spectral information, but also
+capture some spatial information.
+Image segmentation is the process of breaking an image into groups of similar pixels.
+It has been studied since the 1970s, so there are many image segmentation algorithms.
+For this package, we implement the Watershed segmentation algorithm, which has been
+extended to HSI.
+This package is based on the [SpecAI.Seg](https://github.com/lanl/SpecAI.Seg) package in Python, though with less
+functionality [@specaiseg].
+
+The rest of this vignette will first show how we can download different standard
+HSI, and how we can make some basic plots to visulaize these images.
+Next we will describe how to run the Watershed segmentation algorithm, along with
+the various parameters that can change the segmentation results.
+Lastly we will show how to make some basic plots of the segmentation results.
+
+## Data Loading
+
+<!-- Kyle, write about your functions and their options -->
+
+```{r load indian pines}
+ip <- get_data("indianpines")
+```
+
+
+### Plotting and Summaries
+
+<!-- Eric, demonstrate the summary and first basic plotting functions -->
+
+## Watershed Segmentation
+
+<!-- Scout, write about RCMG -->
+
+In order to use the Watershed segmentation algorithm, we need to find the gradient
+for the image.
+We calculate the Robust Color Morphological Gradient as defined in [@tarabalka2010segmentation].
+First, for every pixel $X_p$, find the set of $e$ neighboring pixels $\chi=\{X_p^1, X_p^2,...,X_p^e\}$ 
+where $X_p\in\chi$.
+Let $\chi^r\subset \chi$, such that the $r$ pairs of pixels with the largest 
+distance have been removed.
+Second, find the RCMG as $\nabla_{\chi^r, d}^{RCM}=\max_{i,j\in\chi^r}\{d(X_p^i, X_p^j)\}$, 
+where $d$ is an appropriate distance function.
+The original paper suggests using the Euclidean distance function, however, 
+there are other options that may be better for HSI, such as Cosine Distance, 
+Spectral Angle Mapper, Euclidean Cumulative Sum, Kullbach-Leibler Pseudo 
+Divergence, and others [@deborah2016towards].
+
+For this package, we implemented a `rcmg_euclidean` and `rcmg_cos` gradient calculation
+which implements the euclidean and cosine distances respectively.
+Each is implemented in Rcpp armadillo to help reduce computation time.
+It is recommend to use `calc_grad` function for error checking.
+For example, we can calculate the RCMG using Euclidean distance with:
+
+```{r rcmg euclid}
+grad_e <- calc_grad(ip)
+plot(grad_e, log=TRUE)
+```
+
+Additionally, we can use the cosine distance function, which produces a slightly
+different gradient:
+
+```{r rcmg cosine}
+grad_c <- calc_grad(ip, "cos")
+plot(grad_c, log=TRUE)
+```
+
+Another parameter that can be tuned is $r$, which is the number of pairs of pixels
+to remove.
+This will create overall smaller gradient values when you use a larger $r$.
+For example, here is the Euclidean RCMG using $r=6$:
+
+```{r rcmg 6}
+grad_6 <- calc_grad(ip, "cos", 6)
+plot(grad_6, log=TRUE)
+```
+
+One parameter that we don't allow to change is the window size.
+Our implementation sets the window size to be 1, which corresponds to finding
+the 8 neighboring pixels.
+
+
+<!-- Zac, write about the watershed segmentation (our modifications and parameters) and mark boundaries -->
+
+### Plotting and Summaries
+
+<!-- Eric, demonstrate the basic plotting functions for the segmentations -->
+
+## References

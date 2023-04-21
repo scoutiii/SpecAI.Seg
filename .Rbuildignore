@@ -6,3 +6,5 @@
 ^HSI_Data$
 ^Scripts$
 ^README\.Rmd$
+^doc$
+^Meta$
