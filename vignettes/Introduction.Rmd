@@ -78,7 +78,7 @@ the function downloads the image data, its default is true. Lastly, clip_p is
 a number zero to one that represents the percentile the image will be clipped 
 to. This sets the outlier values to the clip_p percentile given, or the default 
 value of 0.9975. The get_data() function saves the image data and outputs a 
-HSI_data class object thatcan be assigned to a variable as shown below.
+HSI_data class object that can be assigned to a variable as shown below.
 
 
 ```{r load indian pines}
