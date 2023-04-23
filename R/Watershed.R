@@ -73,7 +73,9 @@ watershed_hsi <- function(grad, tolerance = 0.01, ext = 200, ...) {
   grad[grad < stats::quantile(grad, seq(0, 1, 0.05))[15]] <- 0
   # Use watershed algorithm
   seg <- EBImage::watershed(grad, tolerance = tolerance, ext = ext, ...)
-  return(seg)
+  seg <- structure(seg, class = "HSI_seg")
+  #return(seg)
+  seg
 }
 
 #' Mark boundaries for HSI

@@ -69,6 +69,10 @@ ip <- get_data("indianpines")
 ### Plotting and Summaries
 
 <!-- Eric, demonstrate the summary and first basic plotting functions -->
+```{r summary and first plot}
+summary(ip)
+plot(ip)
+```
 
 ## Watershed Segmentation
 
@@ -127,5 +131,10 @@ the 8 neighboring pixels.
 ### Plotting and Summaries
 
 <!-- Eric, demonstrate the basic plotting functions for the segmentations -->
+```{r basic plot for segmentations}
+#For the sake of getting it to work now, I'll run through watershed, Zac can delete the following lines once he's done with his section
+shed <- watershed_hsi(ip)
+plot(shed, ip)
+```
 
 ## References
