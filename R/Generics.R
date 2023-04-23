@@ -28,8 +28,6 @@ plot.HSI_grad <- function(x, y, ...) {
 #'
 #' @return nothing
 #' @export
-#'
-#' @examples
 plot.HSI_seg <- function(x, y, ...) {
   # Check to make sure y is an HSI_data
   if (!any(methods::is(y) %in% c("HSI_data"))) {
@@ -37,7 +35,7 @@ plot.HSI_seg <- function(x, y, ...) {
   }
 
   # Use marked image to mark the segment boundaries
-  marked <- mark_boundaries(x, y, y$rgb_bands)
+  marked <- mark_boundaries(x, y)
 
   # Plot marked image
   ggmap::ggimage(marked)
@@ -53,8 +51,6 @@ plot.HSI_seg <- function(x, y, ...) {
 #'
 #' @return nothing
 #' @export
-#'
-#' @examples
 plot.HSI_data <- function(x, y, ...) {
   ggmap::ggimage(x$img_rgb)
 }
@@ -67,8 +63,6 @@ plot.HSI_data <- function(x, y, ...) {
 #'
 #' @return nothing
 #' @export
-#'
-#' @examples
 summary.HSI_data <- function(object, ...){
   cat("The Data name is", object$name, '\n')
   cat("This image is", dim(object$img_raw)[1], "x",

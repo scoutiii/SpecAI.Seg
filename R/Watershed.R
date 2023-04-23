@@ -62,11 +62,12 @@ calc_grad <- function(data, type = "euclidean", r = 1) {
 #' @return A segmented image built from the gradient, in the form of a matrix.
 #' @export
 watershed_hsi <- function(grad, tolerance = 0.01, ext = 200, ...) {
-  if (methods::is(grad) %in% c("HSI_data")) {
-    grad <- calc_grad(grad, ...)
-  }
   if (!any(methods::is(grad) %in% c("matrix", "HSI_grad"))) {
     stop("grad must be a matrix, HSI_data, or HSI_grad")
+  }
+
+  if (methods::is(grad) %in% c("HSI_data")) {
+    grad <- calc_grad(grad, ...)
   }
 
   # Get rid of some of the gradient noise
@@ -74,6 +75,7 @@ watershed_hsi <- function(grad, tolerance = 0.01, ext = 200, ...) {
   # Use watershed algorithm
   seg <- EBImage::watershed(grad, tolerance = tolerance, ext = ext, ...)
   seg <- structure(seg, class = "HSI_seg")
+  attr(seg, "grad") <- grad
   #return(seg)
   seg
 }
@@ -91,6 +93,9 @@ watershed_hsi <- function(grad, tolerance = 0.01, ext = 200, ...) {
 mark_boundaries <- function(seg, img_rgb, col = c(1, 1, 0)) {
   if (methods::is(img_rgb) == "HSI_data") {
     img_rgb <- img_rgb$img_rgb
+  }
+  if (class(seg) != "HSI_seg"){
+    stop("Please input an object returned from the watershed_hsi method")
   }
 
   # Standardize the segmented image, necessary for the dilation function

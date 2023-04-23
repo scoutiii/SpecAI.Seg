@@ -6,3 +6,4 @@ ip <- get_data("indianpines")
 grad <- calc_grad(ip)
 plot(grad)
 plot(grad, log=TRUE)
+

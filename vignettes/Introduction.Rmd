@@ -148,6 +148,22 @@ finding the 8 neighboring pixels.
 
 <!-- Zac, write about the watershed segmentation (our modifications and parameters) and mark boundaries -->
 
+Once the gradient of the HSI has been calculated, watershed_hsi allows users to segment that gradient into distinct pieces using the watershed algorithm.
+
+```{r watershed_hsi}
+seg <- watershed_hsi(grad_e, tolerance = 1, ext = 200)
+```
+
+watershed_hsi takes three arguments, a gradient (or object of class "HSI_data"), a tolerance parameter, and an ext parameter. The gradient will typically be what is returned by calc_grad. The tolerance parameter is dependent on the scale of your gradient, and will combine objects with a height difference that is less than tolerance. The ext parameter functions as a way to smooth out the segmented image. This implementation of the watershed algorithm also minimizes gradient noise by ignoring the lower quantiles of said gradient. watershed_hsi will return an object of class "HSI_seg", which contains the segmented image, and the gradient used as an attribute of the object.
+
+```{r mark_boundaries}
+marked_img <- mark_boundaries(seg, ip$img_rgb, c(1, 1, 0))
+
+ggmap::ggimage(marked_img)
+```
+
+mark_boundaries takes the segmented gradient, an RGB version of the image, and an RGB color vector. It used erosion and dilation to mark the RGB image along the boundaries of the segmented gradient. The color vector can be changed freely, but has a default of yellow (maximum red and green). This function will typically used automatically when plotting an object of class "HSI_seg"
+
 ### Plotting and Summaries
 
 <!-- Eric, demonstrate the basic plotting functions for the segmentations -->

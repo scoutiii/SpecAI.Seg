@@ -3,6 +3,7 @@
 S3method(plot,HSI_data)
 S3method(plot,HSI_grad)
 S3method(plot,HSI_seg)
+S3method(summary,HSI_data)
 export(calc_grad)
 export(get_all_data)
 export(get_data)
