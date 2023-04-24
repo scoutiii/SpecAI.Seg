@@ -25,7 +25,6 @@ image_details <- list(
     ),
     "ignored_labels" = c(1)
   ),
-
   "Salinas" = list(
     "urls" = c(
       "http://www.ehu.eus/ccwintco/uploads/a/a3/Salinas_corrected.mat",
@@ -57,7 +56,6 @@ image_details <- list(
     ),
     "ignored_labels" = c(1)
   ),
-
   "PaviaU" = list(
     "urls" = c(
       "http://www.ehu.eus/ccwintco/uploads/e/ee/PaviaU.mat",
@@ -82,7 +80,6 @@ image_details <- list(
     ),
     "ignored_labels" = c(1)
   ),
-
   "KSC" = list(
     "urls" = c(
       "http://www.ehu.es/ccwintco/uploads/2/26/KSC.mat",
@@ -111,7 +108,6 @@ image_details <- list(
     ),
     "ignored_labels" = c(1)
   ),
-
   "IndianPines" = list(
     "urls" = c(
       "http://www.ehu.eus/ccwintco/uploads/6/67/Indian_pines_corrected.mat",
@@ -143,7 +139,6 @@ image_details <- list(
     ),
     "ignored_labels" = c(1)
   ),
-
   "Botswana" = list(
     "urls" = c(
       "http://www.ehu.es/ccwintco/uploads/7/72/Botswana.mat",

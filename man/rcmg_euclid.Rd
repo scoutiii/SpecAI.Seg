@@ -17,5 +17,5 @@ A matrix containing the Euclidean distances of the pixels
 \description{
 For every pixel, find the RCMG where the 8 neighboring pixels make up the
 pairwise distance matrix, and r is the number of pairs of pixels to remove.
-Don't set r larger than 8.
+Don't set r larger than 3.
 }

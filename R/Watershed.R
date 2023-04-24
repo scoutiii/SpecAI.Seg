@@ -6,7 +6,7 @@
 #'
 #' @param data HSI_data or array to calculate gradient of.
 #' @param type "euclidean" or "cos".
-#' @param r how many pairs of pixels to remove.
+#' @param r how many pairs of pixels to remove (between 0 and 4).
 #'
 #' @return Appropriate RCMG gradient
 #' @export
@@ -24,8 +24,8 @@ calc_grad <- function(data, type = "euclidean", r = 1) {
   if (!any(type %in% c("euclidean", "cos"))) {
     stop("Type must be either 'euclidean' or 'cos'")
   }
-  if (r >= 7) {
-    stop("R must be less than 7")
+  if (r >= 4 || r <= 0) {
+    stop("R must be less than 4 and greater than 0")
   }
   if (any(methods::is(data) == "array")) {
     if (length(dim(data)) != 3) {
@@ -62,11 +62,11 @@ calc_grad <- function(data, type = "euclidean", r = 1) {
 #' @return A segmented image built from the gradient, in the form of a matrix.
 #' @export
 watershed_hsi <- function(grad, tolerance = 0.01, ext = 200, ...) {
-  if (!any(methods::is(grad) %in% c("matrix", "HSI_grad"))) {
+  if (!any(methods::is(grad) %in% c("matrix", "HSI_grad", "HSI_data"))) {
     stop("grad must be a matrix, HSI_data, or HSI_grad")
   }
 
-  if (methods::is(grad) %in% c("HSI_data")) {
+  if (methods::is(grad, "HSI_data")) {
     grad <- calc_grad(grad, ...)
   }
 
@@ -76,7 +76,6 @@ watershed_hsi <- function(grad, tolerance = 0.01, ext = 200, ...) {
   seg <- EBImage::watershed(grad, tolerance = tolerance, ext = ext, ...)
   seg <- structure(seg, class = "HSI_seg")
   attr(seg, "grad") <- grad
-  #return(seg)
   seg
 }
 
@@ -86,16 +85,22 @@ watershed_hsi <- function(grad, tolerance = 0.01, ext = 200, ...) {
 #'
 #' @param seg The segmented image, typically returned from watershed_SpecAI.
 #' @param img_rgb The image to be marked up, with RGB channels, or an HSI_data.
-#' @param col A vector of colors representing (R, G, B) values.
+#' @param col A vector of colors representing (R, G, B) values between 0 and 1.
 #'
 #' @return The image with boundaries marked.
 #' @export
 mark_boundaries <- function(seg, img_rgb, col = c(1, 1, 0)) {
-  if (methods::is(img_rgb) == "HSI_data") {
+  if (any(methods::is(img_rgb) == "HSI_data")) {
     img_rgb <- img_rgb$img_rgb
   }
-  if (class(seg) != "HSI_seg"){
+  if (!methods::is(seg, "HSI_seg")) {
     stop("Please input an object returned from the watershed_hsi method")
+  }
+  if (any(col > 1) || any(col < 0)) {
+    stop("col should be rgb values between 0 and 1")
+  }
+  if (length(col) != 3) {
+    stop("col must contain exactly 3 values")
   }
 
   # Standardize the segmented image, necessary for the dilation function
@@ -116,5 +121,5 @@ mark_boundaries <- function(seg, img_rgb, col = c(1, 1, 0)) {
   for (i in seq_along(col)) {
     img_rgb[, , i][bound3] <- col[i]
   }
-  return(img_rgb)
+  img_rgb
 }

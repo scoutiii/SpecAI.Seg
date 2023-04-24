@@ -39,7 +39,6 @@ plot.HSI_seg <- function(x, y, ...) {
 
   # Plot marked image
   ggmap::ggimage(marked)
-
 }
 
 
@@ -63,15 +62,17 @@ plot.HSI_data <- function(x, y, ...) {
 #'
 #' @return nothing
 #' @export
-summary.HSI_data <- function(object, ...){
-  cat("The Data name is", object$name, '\n')
-  cat("This image is", dim(object$img_raw)[1], "x",
-      as.character(dim(object$img_raw)[2])
-      , "pixels with", as.character(dim(object$img_raw)[3]),
-      "layers.", '\n')
-  cat("The RGB bands are: ", object$rgb_bands, '\n')
+summary.HSI_data <- function(object, ...) {
+  cat("The Data name is", object$name, "\n")
+  cat(
+    "This image is", dim(object$img_raw)[1], "x",
+    as.character(dim(object$img_raw)[2]),
+    "pixels with", as.character(dim(object$img_raw)[3]),
+    "layers.", "\n"
+  )
+  cat("The RGB bands are: ", object$rgb_bands, "\n")
   cat("The gt levels are: \n")
   levels <- seq_along(object$label_values)
-  paste(levels-1, object$label_values)
-  #Match with $label_values
+  paste(levels - 1, object$label_values)
+  # Match with $label_values
 }

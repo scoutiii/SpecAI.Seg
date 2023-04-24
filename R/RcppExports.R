@@ -28,7 +28,7 @@ get_neigh <- function(row, col, img) {
 #'
 #' For every pixel, find the RCMG where the 8 neighboring pixels make up the
 #' pairwise distance matrix, and r is the number of pairs of pixels to remove.
-#' Don't set r larger than 8.
+#' Don't set r larger than 3.
 #'
 #' @param img A 3D cube containing the image data
 #' @param r An integer specifying the radius of the rolling window
@@ -45,7 +45,7 @@ rcmg_euclid <- function(img, r = 1L) {
 #'
 #' For every pixel, find the RCMG where the 8 neighboring pixels make up the
 #' pairwise distance matrix, and r is the number of pairs of pixels to remove.
-#' Don't set r larger than 8.
+#' Don't set r larger than 3.
 #'
 #' @param img A 3D cube containing the image data
 #' @param r An integer specifying the radius of the rolling window

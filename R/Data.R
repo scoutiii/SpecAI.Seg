@@ -12,8 +12,8 @@
 #'
 #' @examples
 #' \dontrun{
-#'   bots <- get_data("botswana")
-#'   pu <- get_data("PaviaU", verbose = FALSE, clip_p = .9950)
+#' bots <- get_data("botswana")
+#' pu <- get_data("PaviaU", verbose = FALSE, clip_p = .9950)
 #' }
 #'
 #' @export
@@ -31,6 +31,11 @@ get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE,
   if (!is.logical(verbose)) {
     stop("verbose must be a boolean")
   }
+  if (clip_p < .5) {
+    clip_p <- 1 - clip_p
+  }
+
+
   data_info <- image_details[[which(data_names == name)]]
   name <- names(image_details)[ind]
 
@@ -100,7 +105,7 @@ get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE,
 #'
 #' @examples
 #' \dontrun{
-#'   get_all_data(verbose = FALSE)
+#' get_all_data(verbose = FALSE)
 #' }
 #'
 #' @export

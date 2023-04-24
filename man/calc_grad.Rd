@@ -11,7 +11,7 @@ calc_grad(data, type = "euclidean", r = 1)
 
 \item{type}{"euclidean" or "cos".}
 
-\item{r}{how many pairs of pixels to remove.}
+\item{r}{how many pairs of pixels to remove (between 0 and 4).}
 }
 \value{
 Appropriate RCMG gradient

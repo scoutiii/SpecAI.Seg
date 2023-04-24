@@ -24,8 +24,8 @@ paviac (center), ksc (Kennedy Space Center), botswana
 }
 \examples{
 \dontrun{
-  bots <- get_data("botswana")
-  pu <- get_data("PaviaU", verbose = FALSE, clip_p = .9950)
+bots <- get_data("botswana")
+pu <- get_data("PaviaU", verbose = FALSE, clip_p = .9950)
 }
 
 }

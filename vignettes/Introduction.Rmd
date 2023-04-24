@@ -23,62 +23,43 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(SpecAI.Seg)
-
-# library(knitr)
-# library(jpeg)
 ```
 
-In this vignette, we will discus the usage of this package for the
-purpose of hyperspectral image (HSI) segmentation. We will also
-demonstrate all the main function usage and options.
+In this vignette, we will discus the usage of this package for the purpose of hyperspectral image (HSI) segmentation.
+We will also demonstrate all the main function usage and options.
 
 ## Introduction
 
-Hyperspectral images (HSI) are very similar to color images but differ
-in the number of channels. Gray-scale images contain 1 channel of
-information, and color images contain 3 channels of information
-representing red, green, and blue. HSI on the other hand can have
-anywhere between 100 to 300 channels representing a whole range of
-different color wavelengths in the electromagnetic spectrum. In R, we
-simply store them as arrays, where the first two dimensions are the
-spatial dimensions, and the third dimension is the spectral dimension.
+Hyperspectral images (HSI) are very similar to color images but differ in the number of channels.
+Gray-scale images contain 1 channel of information, and color images contain 3 channels of information representing red, green, and blue. 
+HSI on the other hand can have anywhere between 100 to 300 channels representing a whole range of different color wavelengths in the electromagnetic spectrum.
+In R, we simply store them as arrays, where the first two dimensions are the spatial dimensions, and the third dimension is the spectral dimension.
 
-HSI contains a lot of information, but can be difficult to analyze on a
-per-pixel basis. We can use image segmentation to help summarize the
-spectral information, but also capture some spatial information. Image
-segmentation is the process of breaking an image into groups of similar
-pixels. It has been studied since the 1970s, so there are many image
-segmentation algorithms. For this package, we implement the Watershed
-segmentation algorithm, which has been extended to HSI. This package is
-based on the [SpecAI.Seg](https://github.com/lanl/SpecAI.Seg) package in
-Python, though with less functionality [@specaiseg].
+HSI contains a lot of information, but can be difficult to analyze on a per-pixel basis.
+We can use image segmentation to help summarize the spectral information, but also capture some spatial information.
+Image segmentation is the process of breaking an image into groups of similar pixels.
+It has been studied since the 1970s, so there are many image segmentation algorithms.
+For this package, we implement the Watershed segmentation algorithm, which has been extended to HSI.
+This package is based on the [SpecAI.Seg](https://github.com/lanl/SpecAI.Seg) package in Python, though with less functionality [@specaiseg].
 
-The rest of this vignette will first show how we can download different
-standard HSI, and how we can make some basic plots to visulaize these
-images. Next we will describe how to run the Watershed segmentation
-algorithm, along with the various parameters that can change the
-segmentation results. Lastly we will show how to make some basic plots
-of the segmentation results.
+The rest of this vignette will first show how we can download different standard HSI, and how we can make some basic plots to visualize these images.
+Next we will describe how to run the Watershed segmentation algorithm, along with the various parameters that can change the segmentation results.
+Lastly we will show how to make some basic plots of the segmentation results.
 
 ## Data Loading
 
 <!-- Kyle, write about your functions and their options -->
 
-Before segmenting or plotting the hyperspectral images, we must first download
-and clean the data. This package contains two functions to download and save
-the HSI data, get_data() and get_all_data(). The get_all_data() function 
-takes no parameters and downloads each of the images in the image_details list. 
-The get_data() function can have four parameters: 
-name, folder, verbose and clip_p. Name is a string argument
-for the name of the image to be downloaded and loaded and the only parameter 
-that must be included in the function call. Folder is a string argument for the 
-name of the folder to save the data to, it has a default value of "./HSI_Data/".
-Verbose is a boolean value that determines if messages are to be displayed as
-the function downloads the image data, its default is true. Lastly, clip_p is 
-a number zero to one that represents the percentile the image will be clipped 
-to. This sets the outlier values to the clip_p percentile given, or the default 
-value of 0.9975. The get_data() function saves the image data and outputs a 
-HSI_data class object that can be assigned to a variable as shown below.
+Before segmenting or plotting the hyperspectral images, we must first download and clean the data.
+This package contains two functions to download and save the HSI data, `get_data()` and `get_all_data()`. 
+The `get_all_data()` function takes no parameters and downloads each of the images in the image_details list. 
+The `get_data()` function can have four parameters: name, folder, verbose and clip_p. Name is a string argument for the name of the image to be downloaded and loaded  and the only parameter that must be included in the function call.
+The possible datasets are "indianpines", "salinas", "paviau", "paviac", "ksc", and "botswana".
+Folder is a string argument for the name of the folder to save the data to, it has a default value of "./HSI_Data/". 
+Verbose is a Boolean value that determines if messages are to be displayed as the function downloads the image data, its default is true.
+Lastly, clip_p is a number between zero and one that represents the percentile the image will be clipped to.
+This sets the outlier values to the clip_p percentile given, for example any value above the 99.75th percentile will be set to be equal to the 99.75th percentile, similarly if a value is below .25th percentile. 
+The `get_data()` function saves the image data and outputs an `HSI_data` class object that can be assigned to a variable as shown below where we load in the Indian Pines image.
 
 
 ```{r load indian pines}
@@ -89,7 +70,10 @@ ip <- get_data("indianpines")
 
 <!-- Eric, demonstrate the summary and first basic plotting functions -->
 
-```{r summary and first plot}
+One can plot the false coloring of the image by simply using the `plot` function.
+Additionally, one can summarize the dataset features by using the `summary` function.
+
+```{r summary and first plot, eval=TRUE}
 summary(ip)
 plot(ip)
 ```
@@ -98,63 +82,57 @@ plot(ip)
 
 <!-- Scout, write about RCMG -->
 
-In order to use the Watershed segmentation algorithm, we need to find
-the gradient for the image. We calculate the Robust Color Morphological
-Gradient as defined in [@tarabalka2010segmentation]. First, for every
-pixel $X_p$, find the set of $e$ neighboring pixels
-$\chi=\{X_p^1, X_p^2,...,X_p^e\}$ where $X_p\in\chi$. Let
-$\chi^r\subset \chi$, such that the $r$ pairs of pixels with the largest
-distance have been removed. Second, find the RCMG as
-$\nabla_{\chi^r, d}^{RCM}=\max_{i,j\in\chi^r}\{d(X_p^i, X_p^j)\}$, where
-$d$ is an appropriate distance function. The original paper suggests
-using the Euclidean distance function, however, there are other options
-that may be better for HSI, such as Cosine Distance, Spectral Angle
-Mapper, Euclidean Cumulative Sum, Kullbach-Leibler Pseudo Divergence,
-and others [@deborah2016towards].
+In order to use the Watershed segmentation algorithm, we need to find the gradient for the image.
+We calculate the Robust Color Morphological Gradient as defined in [@tarabalka2010segmentation]. 
+First, for every pixel $X_p$, find the set of $e$ neighboring pixels $\chi=\{X_p^1, X_p^2,...,X_p^e\}$ where $X_p\in\chi$.
+Let $\chi^r\subset \chi$, such that the $r$ pairs of pixels with the largest distance have been removed.
+Second, find the RCMG as $\nabla_{\chi^r, d}^{RCM}=\max_{i,j\in\chi^r}\{d(X_p^i, X_p^j)\}$, where $d$ is an appropriate distance function.
+The original paper suggests using the Euclidean distance function, however, there are other options that may be better for HSI, such as Cosine Distance, Spectral Angle Mapper, Euclidean Cumulative Sum, Kullbach-Leibler Pseudo Divergence, and others [@deborah2016towards].
 
-For this package, we implemented a `rcmg_euclidean` and `rcmg_cos`
-gradient calculation which implements the euclidean and cosine distances
-respectively. Each is implemented in Rcpp armadillo to help reduce
-computation time. It is recommend to use `calc_grad` function for error
-checking. For example, we can calculate the RCMG using Euclidean
-distance with:
+For this package, we implemented a `rcmg_euclidean` and `rcmg_cos` gradient calculation which implements the euclidean and cosine distances respectively.
+Each is implemented in Rcpp armadillo to help reduce computation time.
+It is recommend to use `calc_grad` function for error checking. 
+For example, we can calculate the RCMG using Euclidean distance with:
 
 ```{r rcmg euclid}
 grad_e <- calc_grad(ip)
-plot(grad_e, log=TRUE)
+plot(grad_e, log = TRUE)
 ```
 
-Additionally, we can use the cosine distance function, which produces a
-slightly different gradient:
+Additionally, we can use the cosine distance function, which produces a slightly different gradient:
 
 ```{r rcmg cosine}
 grad_c <- calc_grad(ip, "cos")
-plot(grad_c, log=TRUE)
+plot(grad_c, log = TRUE)
 ```
 
-Another parameter that can be tuned is $r$, which is the number of pairs
-of pixels to remove. This will create overall smaller gradient values
-when you use a larger $r$. For example, here is the Euclidean RCMG using
-$r=6$:
+Another parameter that can be tuned is $r$, which is the number of pairs of pixels to remove.
+This will create overall smaller gradient values when you use a larger $r$.
+For example, here is the Euclidean RCMG using $r=2$:
 
-```{r rcmg 6}
-grad_6 <- calc_grad(ip, "cos", 6)
-plot(grad_6, log=TRUE)
+```{r rcmg 2}
+grad_2 <- calc_grad(ip, "cos", 2)
+plot(grad_2, log = TRUE)
 ```
 
-One parameter that we don't allow to change is the window size. Our
-implementation sets the window size to be 1, which corresponds to
-finding the 8 neighboring pixels.
+One parameter that we don't allow to change is the window size. 
+Our implementation sets the window size to be 1, which corresponds to finding the 8 neighboring pixels.
 
 <!-- Zac, write about the watershed segmentation (our modifications and parameters) and mark boundaries -->
 
-Once the gradient of the HSI has been calculated, watershed_hsi allows users to segment that gradient into distinct pieces using the watershed algorithm.
+Once the gradient of the HSI has been calculated, `watershed_hsi` allows users to segment that gradient into distinct pieces using the watershed algorithm.
 
 ```{r watershed_hsi}
 seg <- watershed_hsi(grad_e, tolerance = 1, ext = 200)
 ```
 
-watershed_hsi takes three arguments, a gradient (or object of class "HSI_data"), a tolerance parameter, and an ext parameter. The gradient will typically be what is returned by calc_grad. The tolerance parameter is dependent on the scale of your gradient, and will combine objects with a height difference that is less than tolerance. The ext parameter functions as a way to smooth out the segmented image. This implementation of the watershed algorithm also minimizes gradient noise by ignoring the lower quantiles of said gradient. watershed_hsi will return an object of class "HSI_seg", which contains the segmented image, and the gradient used as an attribute of the object.
+`watershed_hsi` takes three arguments, a gradient (or object of class `HSI_data`),
+a tolerance parameter, and an ext parameter.
+The gradient will typically be what is returned by `calc_grad`.
+The tolerance parameter is dependent on the scale of your gradient, and will combine objects with a height difference that is less than tolerance.
+The ext parameter functions as a way to smooth out the segmented image.
+This implementation of the watershed algorithm also minimizes gradient noise by ignoring the lower quantiles of said gradient.
+`watershed_hsi` will return an object of class `HSI_seg`, which contains the segmented image, and the gradient used as an attribute of the object.
 
 ```{r mark_boundaries}
 marked_img <- mark_boundaries(seg, ip$img_rgb, c(1, 1, 0))
@@ -162,16 +140,17 @@ marked_img <- mark_boundaries(seg, ip$img_rgb, c(1, 1, 0))
 ggmap::ggimage(marked_img)
 ```
 
-mark_boundaries takes the segmented gradient, an RGB version of the image, and an RGB color vector. It used erosion and dilation to mark the RGB image along the boundaries of the segmented gradient. The color vector can be changed freely, but has a default of yellow (maximum red and green). This function will typically used automatically when plotting an object of class "HSI_seg"
+`mark_boundaries` takes the segmented gradient, an RGB version of the image, and an RGB color vector.
+It uses erosion and dilation to mark the RGB image along the boundaries of the segmented gradient.
+The color vector can be changed freely, but has a default of yellow (maximum red and green).
+This function will typically be used automatically when plotting an object of class `HSI_seg`.
 
 ### Plotting and Summaries
 
 <!-- Eric, demonstrate the basic plotting functions for the segmentations -->
 
-```{r basic plot for segmentations}
-#For the sake of getting it to work now, I'll run through watershed, Zac can delete the following lines once he's done with his section
-shed <- watershed_hsi(ip)
-plot(shed, ip)
+```{r basic plot for segmentations, eval=TRUE}
+plot(seg, ip)
 ```
 
 ## References

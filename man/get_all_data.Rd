@@ -14,7 +14,7 @@ Downloads HSI data for all 6 images
 }
 \examples{
 \dontrun{
-  get_all_data(verbose = FALSE)
+get_all_data(verbose = FALSE)
 }
 
 }

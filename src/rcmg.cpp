@@ -117,7 +117,7 @@ arma::mat pairwise_cosine(const arma::mat& X) {
 //'
 //' For every pixel, find the RCMG where the 8 neighboring pixels make up the
 //' pairwise distance matrix, and r is the number of pairs of pixels to remove.
-//' Don't set r larger than 8.
+//' Don't set r larger than 3.
 //'
 //' @param img A 3D cube containing the image data
 //' @param r An integer specifying the radius of the rolling window
@@ -133,9 +133,9 @@ arma::mat rcmg_euclid(const arma::cube& img, int r=1) {
   arma::mat grad = arma::zeros<arma::mat>(n, m);
 
   #pragma omp parallel for
-  for (int r=0; r<n; r++) {
-    for (int c=0; c<m; c++) {
-      arma::mat neighs = get_neigh(r, c, img);
+  for (int row=0; row<n; row++) {
+    for (int col=0; col<m; col++) {
+      arma::mat neighs = get_neigh(row, col, img);
       arma::mat dists = pairwise_euclidean(neighs);
       for (int i=0; i<r; i++) {
         arma::uword max_index = dists.index_max();
@@ -148,7 +148,7 @@ arma::mat rcmg_euclid(const arma::cube& img, int r=1) {
           dists(max_row, j) = 0;
         }
       }
-      grad(r, c) = dists.max();
+      grad(row, col) = dists.max();
     }
   }
 
@@ -160,7 +160,7 @@ arma::mat rcmg_euclid(const arma::cube& img, int r=1) {
 //'
 //' For every pixel, find the RCMG where the 8 neighboring pixels make up the
 //' pairwise distance matrix, and r is the number of pairs of pixels to remove.
-//' Don't set r larger than 8.
+//' Don't set r larger than 3.
 //'
 //' @param img A 3D cube containing the image data
 //' @param r An integer specifying the radius of the rolling window
@@ -176,22 +176,20 @@ arma::mat rcmg_cos(const arma::cube& img, int r=1) {
   arma::mat grad = arma::zeros<arma::mat>(n, m);
 
   #pragma omp parallel for
-  for (int r=0; r<n; r++) {
-    for (int c=0; c<m; c++) {
-      arma::mat neighs = get_neigh(r, c, img);
+  for (int row=0; row<n; row++) {
+    for (int col=0; col<m; col++) {
+      arma::mat neighs = get_neigh(row, col, img);
       arma::mat dists = pairwise_cosine(neighs);
       for (int i=0; i<r; i++) {
-        arma::uword max_index = dists.index_max();
-        arma::uword max_row = max_index / dists.n_cols;
-        arma::uword max_col = max_index % dists.n_cols;
-        for (arma::uword j=0; j<dists.n_rows; j++) {
-          dists(j, max_col) = 0;
-        }
-        for (arma::uword j=0; j<dists.n_cols; j++) {
-          dists(max_row, j) = 0;
+        int max_index = (int)dists.index_max();
+        int max_row = max_index / (int)dists.n_cols;
+        int max_col = max_index % (int)dists.n_cols;
+        for (int j=0; j<(int)dists.n_rows; j++) {
+          dists(j, max_col) = 0.0;
+          dists(max_row, j) = 0.0;
         }
       }
-      grad(r, c) = dists.max();
+      grad(row, col) = dists.max();
     }
   }
 
