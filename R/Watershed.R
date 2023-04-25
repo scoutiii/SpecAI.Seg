@@ -123,3 +123,15 @@ mark_boundaries <- function(seg, img_rgb, col = c(1, 1, 0)) {
   }
   img_rgb
 }
+
+
+
+# Wrapper function for marker_based_watershed
+marker_based_watershed_wrapper <- function(gradient_image, markers = NULL) {
+  if (is.null(markers)) {
+    markers <- find_local_minima(gradient_image)
+  }
+
+  segmented_image <- marker_based_watershed(gradient_image, markers)
+  return(segmented_image)
+}

@@ -2,8 +2,11 @@ load_all()
 library(SpecAI.Seg)
 
 ip <- get_data("indianpines")
+grad <- calc_grad(ip, "cos", r=1)
+grad_2 <- calc_grad(ip, "cos", r=3)
 seg <- watershed_hsi(ip)
 relabel_seg(seg)
+test_mat <- seg
 
 test_mat <- matrix(c(1,1,0, 1,0,0, 0,1,1), nrow=3)
 test_mat <- seg
@@ -45,3 +48,6 @@ for (r in seq_len(nrow(seg))) {
   }
 }
 new_seg
+class(new_seg) <- "HSI_seg"
+plot(new_seg, ip)
+plot(seg, ip)
