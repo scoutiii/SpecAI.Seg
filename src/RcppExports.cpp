@@ -48,23 +48,11 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// relabel_seg
-arma::mat relabel_seg(arma::mat seg);
-RcppExport SEXP _SpecAI_Seg_relabel_seg(SEXP segSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type seg(segSEXP);
-    rcpp_result_gen = Rcpp::wrap(relabel_seg(seg));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SpecAI_Seg_get_neigh", (DL_FUNC) &_SpecAI_Seg_get_neigh, 3},
     {"_SpecAI_Seg_rcmg_euclid", (DL_FUNC) &_SpecAI_Seg_rcmg_euclid, 2},
     {"_SpecAI_Seg_rcmg_cos", (DL_FUNC) &_SpecAI_Seg_rcmg_cos, 2},
-    {"_SpecAI_Seg_relabel_seg", (DL_FUNC) &_SpecAI_Seg_relabel_seg, 1},
     {NULL, NULL, 0}
 };
 

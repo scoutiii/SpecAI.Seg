@@ -58,18 +58,3 @@ rcmg_cos <- function(img, r = 1L) {
     .Call(`_SpecAI_Seg_rcmg_cos`, img, r)
 }
 
-#' Relabels segmentation
-#'
-#' Relabels segmentation map starting the labeling at 1.
-#'
-#' @param seg a segmentation matrix to relabel.
-#'
-#' @return relabeled matrix.
-#'
-#' @export
-#' @name relabel_seg
-#'
-relabel_seg <- function(seg) {
-    .Call(`_SpecAI_Seg_relabel_seg`, seg)
-}
-

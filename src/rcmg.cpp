@@ -137,15 +137,12 @@ arma::mat rcmg_euclid(const arma::cube& img, int r=1) {
     for (int col=0; col<m; col++) {
       arma::mat neighs = get_neigh(row, col, img);
       arma::mat dists = pairwise_euclidean(neighs);
-      for (int i=0; i<r; i++) {
+      for (int i = 0; i < r; i++) {
         arma::uword max_index = dists.index_max();
-        arma::uword max_row = max_index / dists.n_cols;
-        arma::uword max_col = max_index % dists.n_cols;
-        for (arma::uword j=0; j<dists.n_rows; j++) {
-          dists(j, max_col) = 0;
-        }
-        for (arma::uword j=0; j<dists.n_cols; j++) {
-          dists(max_row, j) = 0;
+        arma::uvec s = arma::ind2sub(arma::size(dists), max_index);
+        for (int j=0; j<(int)dists.n_rows; j++) {
+          dists(j, s(1)) = 0.0;
+          dists(s(0), j) = 0.0;
         }
       }
       grad(row, col) = dists.max();
@@ -180,13 +177,12 @@ arma::mat rcmg_cos(const arma::cube& img, int r=1) {
     for (int col=0; col<m; col++) {
       arma::mat neighs = get_neigh(row, col, img);
       arma::mat dists = pairwise_cosine(neighs);
-      for (int i=0; i<r; i++) {
-        int max_index = (int)dists.index_max();
-        int max_row = max_index / (int)dists.n_cols;
-        int max_col = max_index % (int)dists.n_cols;
+      for (int i = 0; i < r; i++) {
+        arma::uword max_index = dists.index_max();
+        arma::uvec s = arma::ind2sub(arma::size(dists), max_index);
         for (int j=0; j<(int)dists.n_rows; j++) {
-          dists(j, max_col) = 0.0;
-          dists(max_row, j) = 0.0;
+          dists(j, s(1)) = 0.0;
+          dists(s(0), j) = 0.0;
         }
       }
       grad(row, col) = dists.max();
