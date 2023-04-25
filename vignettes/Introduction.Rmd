@@ -27,6 +27,8 @@ library(SpecAI.Seg)
 
 In this vignette, we will discus the usage of this package for the purpose of hyperspectral image (HSI) segmentation.
 We will also demonstrate all the main function usage and options.
+This package can be found at [https://github.com/scoutiii/SpecAI.Seg](https://github.com/scoutiii/SpecAI.Seg).
+Note that the gradient calculations can take several minuets to run depending on your computer speed.
 
 ## Introduction
 
@@ -148,6 +150,8 @@ This function will typically be used automatically when plotting an object of cl
 ### Plotting and Summaries
 
 <!-- Eric, demonstrate the basic plotting functions for the segmentations -->
+
+The segmentation results can again be easily plotted using plot, with the segmentation and the dataset as arguments:
 
 ```{r basic plot for segmentations, eval=TRUE}
 plot(seg, ip)
