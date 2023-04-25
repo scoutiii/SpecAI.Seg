@@ -65,13 +65,19 @@ library(SpecAI.Seg)
 ## basic example code
 
 ip <- get_data("indianpines")
-# plot(ip)
+plot(ip)
 ```
 
 You can then generate the watershed segmentation using:
 
 ```{r segment image}
 seg <- watershed_hsi(ip)
-# plot(seg, ip)
+plot(seg, ip)
+```
+
+See more details in the vignette by using:
+
+```{r vignette, eval=FALSE}
+vignette("Introduction", package="SpecAI.Seg")
 ```
 

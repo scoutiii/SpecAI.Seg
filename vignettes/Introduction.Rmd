@@ -1,8 +1,8 @@
 ---
-title: "Introduction"
+title: "Introduction to SpecAI.Seg"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction}
+  %\VignetteIndexEntry{Introduction to SpecAI.Seg}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 bibliography: references.bibtex
