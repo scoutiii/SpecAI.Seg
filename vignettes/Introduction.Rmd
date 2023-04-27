@@ -80,7 +80,7 @@ summary(ip)
 plot(ip)
 ```
 
-## Watershed Segmentation
+## Watershed Segmentation: Gradient
 
 <!-- Scout, write about RCMG -->
 
@@ -93,7 +93,9 @@ The original paper suggests using the Euclidean distance function, however, ther
 
 For this package, we implemented a `rcmg_euclidean` and `rcmg_cos` gradient calculation which implements the euclidean and cosine distances respectively.
 Each is implemented in Rcpp armadillo to help reduce computation time.
-It is recommend to use `calc_grad` function for error checking. 
+It is recommend to use `calc_grad` function for error checking, additionally it returns the gradient as an `HSI_grad` allowing one to use the generic `plot` function to visualize the gradient.
+Note that the gradient plots have darker colors (black) represent low gradient (high similarity between neighboring pixels), while white indicates larger gradient (low similarity between neighboring pixels.
+.
 For example, we can calculate the RCMG using Euclidean distance with:
 
 ```{r rcmg euclid}
@@ -117,10 +119,19 @@ grad_2 <- calc_grad(ip, "cos", 2)
 plot(grad_2, log = TRUE)
 ```
 
-One parameter that we don't allow to change is the window size. 
+Note that in all these plots we specify a plotting argument `log=TRUE`.
+This will take the log of the gradient, which helps one to visually compare gradients when using different functions.
+Furthermore, there are a few key points to note with these gradients.
+We see that the gradient appears to do a good job at finding the boarders between distinct fields in the image.
+Additionally, we see that all the gradients capture very similar information, though the cosine gradient appears to have somewhat less noise compared to the Euclidean gradient.
+And comparing the two cosine gradients using different `r` values, we see that when using `r=2` the gradient seems a little smoother around the strong edges compared to when `r=1`.
+
+It should be noted that one parameter we don't allow to change is the window size. 
 Our implementation sets the window size to be 1, which corresponds to finding the 8 neighboring pixels.
+For more gradient options, users should use the Python `SpecAI.Seg` package.
 
 <!-- Zac, write about the watershed segmentation (our modifications and parameters) and mark boundaries -->
+## Watershed Segmentation: Segmentation
 
 Once the gradient of the HSI has been calculated, `watershed_hsi` allows users to segment that gradient into distinct pieces using the watershed algorithm.
 
@@ -156,5 +167,17 @@ The segmentation results can again be easily plotted using plot, with the segmen
 ```{r basic plot for segmentations, eval=TRUE}
 plot(seg, ip)
 ```
+
+## Conclusions
+
+This R package brings some of the basic functionality of the original Python `SpecAI.Seg` package to R.
+Though the full functionality has not been implemented, there is a solid foundation of functions to allow users to start exploring hyperspectral image segmentation in R, starting with the Watershed segmentation algorithm.
+This package uses simple array representation of hyperspectral images, which helps to simplify the work flow with these images compared to having to use full spatial dataframe objects.
+Furthermore, this is, to the best of our knowledge, the first R package to allow for hyperspectral image segmentation and visualization.
+
+There is future work to do in order flesh out this package.
+First is to allow users to load in locally stored images, instead of only being able to download the set 6 hyperspectral images we provide.
+Second, implement a new Watershed segmentation algorithm that produces results closer to the Python implemented algorithm.
+Third, implement many more segmentation algorithms, such as Felzenszwalb, Quickshift, and Slic.
 
 ## References
