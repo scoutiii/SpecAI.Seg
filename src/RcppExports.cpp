@@ -59,12 +59,51 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// impose_markers
+NumericMatrix impose_markers(NumericMatrix gradient_image, NumericMatrix markers);
+RcppExport SEXP _SpecAI_Seg_impose_markers(SEXP gradient_imageSEXP, SEXP markersSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type gradient_image(gradient_imageSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type markers(markersSEXP);
+    rcpp_result_gen = Rcpp::wrap(impose_markers(gradient_image, markers));
+    return rcpp_result_gen;
+END_RCPP
+}
+// watershed
+NumericMatrix watershed(NumericMatrix modified_gradient_image, NumericMatrix markers);
+RcppExport SEXP _SpecAI_Seg_watershed(SEXP modified_gradient_imageSEXP, SEXP markersSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type modified_gradient_image(modified_gradient_imageSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type markers(markersSEXP);
+    rcpp_result_gen = Rcpp::wrap(watershed(modified_gradient_image, markers));
+    return rcpp_result_gen;
+END_RCPP
+}
+// marker_based_watershed
+NumericMatrix marker_based_watershed(NumericMatrix gradient_image, NumericMatrix marker_image);
+RcppExport SEXP _SpecAI_Seg_marker_based_watershed(SEXP gradient_imageSEXP, SEXP marker_imageSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type gradient_image(gradient_imageSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type marker_image(marker_imageSEXP);
+    rcpp_result_gen = Rcpp::wrap(marker_based_watershed(gradient_image, marker_image));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SpecAI_Seg_get_neigh", (DL_FUNC) &_SpecAI_Seg_get_neigh, 3},
     {"_SpecAI_Seg_rcmg_euclid", (DL_FUNC) &_SpecAI_Seg_rcmg_euclid, 2},
     {"_SpecAI_Seg_rcmg_cos", (DL_FUNC) &_SpecAI_Seg_rcmg_cos, 2},
     {"_SpecAI_Seg_relabel_seg", (DL_FUNC) &_SpecAI_Seg_relabel_seg, 1},
+    {"_SpecAI_Seg_impose_markers", (DL_FUNC) &_SpecAI_Seg_impose_markers, 2},
+    {"_SpecAI_Seg_watershed", (DL_FUNC) &_SpecAI_Seg_watershed, 2},
+    {"_SpecAI_Seg_marker_based_watershed", (DL_FUNC) &_SpecAI_Seg_marker_based_watershed, 2},
     {NULL, NULL, 0}
 };
 

@@ -1,8 +1,12 @@
 load_all()
 library(SpecAI.Seg)
 
-ip <- get_data("indianpines")
+ip <- get_data("paviau")
 grad <- calc_grad(ip, "cos", r=1)
+seg <- marker_based_watershed_wrapper()
+
+
+
 grad_2 <- calc_grad(ip, "cos", r=3)
 seg <- watershed_hsi(ip)
 relabel_seg(seg)

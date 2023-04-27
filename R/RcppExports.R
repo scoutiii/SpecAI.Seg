@@ -73,3 +73,15 @@ relabel_seg <- function(seg) {
     .Call(`_SpecAI_Seg_relabel_seg`, seg)
 }
 
+impose_markers <- function(gradient_image, markers) {
+    .Call(`_SpecAI_Seg_impose_markers`, gradient_image, markers)
+}
+
+watershed <- function(modified_gradient_image, markers) {
+    .Call(`_SpecAI_Seg_watershed`, modified_gradient_image, markers)
+}
+
+marker_based_watershed <- function(gradient_image, marker_image) {
+    .Call(`_SpecAI_Seg_marker_based_watershed`, gradient_image, marker_image)
+}
+
