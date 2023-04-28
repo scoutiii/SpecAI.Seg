@@ -10,7 +10,7 @@ get_all_data(...)
 \item{...}{Passed to get_data}
 }
 \description{
-Downloads HSI data for all 6 images
+Downloads HSI data for all 6 images in the image_details list.
 }
 \examples{
 \dontrun{

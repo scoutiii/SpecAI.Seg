@@ -7,20 +7,24 @@
 get_data(name, folder = "./HSI_Data/", verbose = TRUE, clip_p = 0.9975)
 }
 \arguments{
-\item{name}{image name to be downloaded}
+\item{name}{String argument of image name to be downloaded.}
 
-\item{folder}{folder to send output to}
+\item{folder}{String argument of folder to send output to.}
 
-\item{verbose}{boolean determining if user wants function messages}
+\item{verbose}{boolean argument that determines if messages are printed as
+function runs.}
 
-\item{clip_p}{percentile to clip the image to}
+\item{clip_p}{Numeric argument between zero and one that represents
+percentile to clip the image outliers to.}
 }
 \value{
 HSI_data object
 }
 \description{
-Downloads HSI data, can be indianpines, salinas, paviau (university),
-paviac (center), ksc (Kennedy Space Center), botswana
+Downloads or loads previously downloaded HSI data. Data can be indianpines,
+salinas, paviau (university), paviac (center), ksc (Kennedy Space Center) or
+botswana. The function returns an HSI_data object that can be used for
+image segmentation, and plotting the resulting segmentation.
 }
 \examples{
 \dontrun{

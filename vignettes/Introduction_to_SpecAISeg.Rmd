@@ -1,10 +1,10 @@
 ---
-title: "Introduction to SpecAI.Seg"
+title: "Introduction_to_SpecAISeg"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to SpecAI.Seg}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Introduction_to_SpecAISeg}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 bibliography: references.bibtex
 csl: https://raw.githubusercontent.com/citation-style-language/styles/master/research-institute-for-nature-and-forest.csl
 link-citations: true
@@ -52,16 +52,11 @@ Lastly we will show how to make some basic plots of the segmentation results.
 
 <!-- Kyle, write about your functions and their options -->
 
-Before segmenting or plotting the hyperspectral images, we must first download 
-and clean the data.
-This package contains two functions to download and save the HSI data, 
-`get_data()` and `get_all_data()`. 
-The `get_all_data()` function takes no parameters and downloads each of the 
-images in the image_details list. 
+Before segmenting or plotting the hyperspectral images, we must first download and clean the data.
+This package contains two functions to download and save the HSI data,  `get_data()` and `get_all_data()`. 
+The `get_all_data()` function takes no parameters and downloads each of the images in the image_details list. 
 The `get_data()` function downloads a single image in the image_details list.
-The `get_data()` function saves the image data and outputs an `HSI_data` 
-class object that can be assigned to a variable as shown below where we load 
-in the Indian Pines image.
+The `get_data()` function saves the image data and outputs an `HSI_data` class object that can be assigned to a variable as shown below where we load in the Indian Pines image.
 
 
 ```{r load indian pines}
