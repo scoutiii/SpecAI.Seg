@@ -1,12 +1,16 @@
 #' Get data function
 #'
-#' Downloads HSI data, can be indianpines, salinas, paviau (university),
-#' paviac (center), ksc (Kennedy Space Center), botswana
+#' Downloads or loads previously downloaded HSI data. Data can be indianpines,
+#' salinas, paviau (university), paviac (center), ksc (Kennedy Space Center) or
+#' botswana. The function returns an HSI_data object that can be used for
+#' image segmentation, and plotting the resulting segmentation.
 #'
-#' @param name image name to be downloaded
-#' @param folder folder to send output to
-#' @param verbose boolean determining if user wants function messages
-#' @param clip_p percentile to clip the image to
+#' @param name String argument of image name to be downloaded.
+#' @param folder String argument of folder to send output to.
+#' @param verbose boolean argument that determines if messages are printed as
+#'                function runs.
+#' @param clip_p Numeric argument between zero and one that represents
+#'               percentile to clip the image outliers to.
 #'
 #' @return HSI_data object
 #'
@@ -99,7 +103,7 @@ get_data <- function(name, folder = "./HSI_Data/", verbose = TRUE,
 
 #' Get all data function
 #'
-#' Downloads HSI data for all 6 images
+#' Downloads HSI data for all 6 images in the image_details list.
 #'
 #' @param ... Passed to get_data
 #'
