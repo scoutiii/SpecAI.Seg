@@ -60,7 +60,7 @@ Some resources can be found [here](https://support.bioconductor.org/p/9137290/).
 
 Here is a basic example of using watershed segmentation on the Indian Pines image.
 First, we can download the image with:
-```{r load data}
+```{r loadData}
 library(SpecAI.Seg)
 ## basic example code
 
@@ -70,7 +70,7 @@ plot(ip)
 
 You can then generate the watershed segmentation using:
 
-```{r segment image}
+```{r segmentImage}
 seg <- watershed_hsi(ip)
 plot(seg, ip)
 ```

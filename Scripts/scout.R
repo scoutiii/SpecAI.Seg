@@ -1,6 +1,10 @@
 load_all()
 library(SpecAI.Seg)
 
+ip <- get_data("paviac")
+summary(ip)
+
+
 ip <- get_data("indianpines")
 grad <- calc_grad(ip, "cos", r=1)
 grad_2 <- calc_grad(ip, "cos", r=3)

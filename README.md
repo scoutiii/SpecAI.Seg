@@ -64,7 +64,7 @@ ip <- get_data("indianpines")
 plot(ip)
 ```
 
-<img src="man/figures/README-load data-1.png" width="100%" />
+<img src="man/figures/README-loadData-1.png" width="100%" />
 
 You can then generate the watershed segmentation using:
 
@@ -73,7 +73,7 @@ seg <- watershed_hsi(ip)
 plot(seg, ip)
 ```
 
-<img src="man/figures/README-segment image-1.png" width="100%" />
+<img src="man/figures/README-segmentImage-1.png" width="100%" />
 
 See more details in the vignette by using:
 
