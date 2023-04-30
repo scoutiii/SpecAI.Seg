@@ -148,9 +148,7 @@ marked_img <- mark_boundaries(seg, ip$img_rgb, c(1, 1, 0))
 ggmap::ggimage(marked_img)
 ```
 
-`mark_boundaries` takes the segmented gradient, an RGB version of the image, and an RGB color vector.
-It uses erosion and dilation to mark the RGB image along the boundaries of the segmented gradient.
-The color vector can be changed freely, but has a default of yellow (maximum red and green).
+`mark_boundaries` takes the segmented gradient, an RGB version of the image, and an RGB color vector. It uses erosion and dilation to return an "image" (in matrix form) with the boundaries of the segmented image marked on the original image, typically in yellow. These yellow lines represent where our image should be segmented according to the watershed algorithm, i.e. the yellow lines should be separating distinct parts of the original hyperspectral image. In the example above, we see the yellow lines typically tracing the outside of the fields, which is what we would expect. It may also be capturing other behaviors that are hard to see in the original RGB image. The color vector can be changed freely, but does have a default of yellow (maximum red and green).
 This function will typically be used automatically when plotting an object of class `HSI_seg`.
 
 ### Plotting and Summaries
