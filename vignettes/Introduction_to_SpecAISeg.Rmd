@@ -67,6 +67,7 @@ ip <- get_data("indianpines")
 
 <!-- Eric, demonstrate the summary and first basic plotting functions -->
 
+The variable ip is of class `HSI_data`, allowing one to use generics to show specific information about the ip data set.
 One can plot the false coloring of the image by simply using the `plot` function.
 Additionally, one can summarize the dataset features by using the `summary` function.
 
@@ -155,7 +156,7 @@ This function will typically be used automatically when plotting an object of cl
 
 <!-- Eric, demonstrate the basic plotting functions for the segmentations -->
 
-The segmentation results can again be easily plotted using plot, with the segmentation and the dataset as arguments:
+The segmentation results can again be easily plotted using plot, this time of `HSI_seg` form, with the segmentation and the dataset as arguments:
 
 ```{r basic plot for segmentations, eval=TRUE}
 plot(seg, ip)
