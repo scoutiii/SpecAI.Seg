@@ -3,14 +3,14 @@
 #' Downloads or loads previously downloaded HSI data. Data can be indianpines,
 #' salinas, paviau (university), paviac (center), ksc (Kennedy Space Center) or
 #' botswana. The function returns an HSI_data object that can be used for
-#' image segmentation, and plotting the resulting segmentation.
+#' image segmentation and plotting the resulting segmentation.
 #'
 #' @param name String argument of image name to be downloaded.
 #' @param folder String argument of folder to send output to.
 #' @param verbose boolean argument that determines if messages are printed as
 #'                function runs.
 #' @param clip_p Numeric argument between zero and one that represents
-#'               percentile to clip the image outliers to.
+#'               percentile to clip the data outliers to.
 #'
 #' @return HSI_data object
 #'
