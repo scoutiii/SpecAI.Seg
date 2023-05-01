@@ -78,5 +78,5 @@ plot(seg, ip)
 See more details in the vignette by using:
 
 ``` r
-vignette("Introduction", package="SpecAI.Seg")
+vignette("Introduction", package = "SpecAI.Seg")
 ```
