@@ -44,14 +44,27 @@ plot.HSI_seg <- function(x, y, ...) {
 
 #' Plot false color image
 #'
+#' Can specify plot_gt=TRUE to plot the outlines of the ground truth segments.
+#'
 #' @param x HSI_data
 #' @param y not used
-#' @param ... not used
+#' @param ... plot_gt=TRUE to plot the ground truth outlines
 #'
 #' @return nothing
 #' @export
 plot.HSI_data <- function(x, y, ...) {
-  ggmap::ggimage(x$img_rgb)
+  args <- list(...)
+
+  if ("plot_gt" %in% names(args)) {
+    if (args$plot_gt == TRUE) {
+      temp_seg <- x$gt
+      class(temp_seg) <- "HSI_seg"
+      marked <- mark_boundaries(temp_seg, x)
+      ggmap::ggimage(marked)
+    }
+  } else {
+    ggmap::ggimage(x$img_rgb)
+  }
 }
 
 

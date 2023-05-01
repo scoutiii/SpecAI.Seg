@@ -1,30 +1,34 @@
+library(SpecAI.Seg)
 
-
-#Get Data and Summary of data
-
+#Get Data and Summary of data (Kyle)
 ip <- get_data("indianpines")
+get_all_data()
 
+# Summarize (Eric)
+class(ip)
 summary(ip)
-
 plot(ip)
+plot(ip, plot_gt=TRUE)
 
-#Gradient
+ggmap::ggimage(ip$gt)
+ggmap::ggimage(ip$gt == 10)
+ip$label_values[11]  # NOTE: gt levels starts at 0
 
+#Gradient (Scout)
 grad_e <- calc_grad(ip)
+
+bm <- bench::mark(calc_grad(ip))
+bm
+
+# Summarize (Eric)
+class(grad_e)
+plot(grad_e)
 plot(grad_e, log = TRUE)
 
-grad_c <- calc_grad(ip, "cos")
-plot(grad_c, log = TRUE)
-
-grad_2 <- calc_grad(ip, "cos", 2)
-plot(grad_2, log = TRUE)
-
-#Watershed itself
-
+#Watershed itself (Zac)
 seg <- watershed_hsi(grad_e, tolerance = 1, ext = 200)
-
 marked_img <- mark_boundaries(seg, ip$img_rgb, c(1, 1, 0))
 
-ggmap::ggimage(marked_img)
-
+# Summarize (Eric)
+class(seg)
 plot(seg, ip)
