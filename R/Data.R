@@ -2,8 +2,21 @@
 #'
 #' Downloads or loads previously downloaded HSI data. Data can be indianpines,
 #' salinas, paviau (university), paviac (center), ksc (Kennedy Space Center) or
-#' botswana. The function returns an HSI_data object that can be used for
-#' image segmentation and plotting the resulting segmentation.
+#' botswana. The function can be called with a numeric argument, clip_p. This
+#' determines the percentile to cap the outlying data at. The function returns
+#' an HSI_data object that can be used for image segmentation and plotting the
+#' resulting segmentation.
+#' The HSI_data object that is returned contains a list of the following items:
+#' name: The name of the image.
+#' img_raw: The raw image data values.
+#' img_clipped: The data values after clipping them according to the clip_p
+#' paramater.
+#' img: The img_clipped data values but on a 0-1 scale.
+#' gt: The ground truth array.
+#' label_values: The label values from image_details.
+#' ignored_labels: The ignored labels from image_details.
+#' rgb_bands: The rgb bands from image_details.
+#' img_rgb: The img but only containing the three channels from rgb_bands.
 #'
 #' @param name String argument of image name to be downloaded.
 #' @param folder String argument of folder to send output to.
